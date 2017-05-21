@@ -1,0 +1,15 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- map -->
+    <dimen name="friend_map_btn_height">42dp</dimen>
+    <dimen name="friend_map_bound_padding">80dp</dimen>
+    <dimen name="bottombar_textsize">10sp</dimen>
+    <dimen name="bottombar_imagewidth">30dp</dimen>
+    <dimen name="bottombar_imageheight">30dp</dimen>
+    <dimen name="homefragment_headroundimage_width">45dp</dimen>
+    <dimen name="homefragment_headroundimage_height">45dp</dimen>
+    <dimen name="setting_textsize">15sp</dimen>
+    <dimen name="setting_headview_paddingtop">20dp</dimen>
+</resources>

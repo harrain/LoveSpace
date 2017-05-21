@@ -1,0 +1,181 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    tools:context="com.example.lovespace.me.MeFragment">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:title="我"
+            app:titleTextColor="@android:color/black"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            />
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:paddingTop="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/setting_head"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/setting_headview_paddingtop"
+                android:paddingBottom="@dimen/setting_headview_paddingtop"
+                android:background="@color/color_gray_bfc2c5"
+                >
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/headview"
+                    app:riv_oval="true"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:src="@mipmap/avatar_def" />
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@id/headview"
+                    android:text="账号："
+                    android:textSize="14sp" />
+
+                <ImageView
+                    style="@style/arrow_right"
+                    android:src="@mipmap/arrow_right" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                style="@style/item_setting">
+
+                <ImageView
+                    android:id="@+id/add_icon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_add_friends" />
+
+                <TextView
+                    style="@style/item_setting_textview"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@id/add_icon"
+                    android:layout_centerVertical="true"
+                    android:text="添加另一半"
+                     />
+
+                <ImageView
+                    style="@style/arrow_right"
+                    android:src="@mipmap/arrow_right" />
+
+            </RelativeLayout>
+
+            <View
+                style="@style/item_divider" />
+
+            <RelativeLayout
+                style="@style/item_setting">
+
+                <TextView
+                    style="@style/item_setting_textview"
+                    android:text="消息提醒"
+                     />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/inform_item_toggle"
+                    style="@style/nimSwitchButton" />
+            </RelativeLayout>
+
+            <View
+                style="@style/item_divider" />
+
+            <RelativeLayout
+                style="@style/item_setting">
+
+                <TextView
+                    style="@style/item_setting_textview"
+                    android:text="响铃模式"
+                     />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/alarm_item_toggle"
+                    style="@style/nimSwitchButton" />
+            </RelativeLayout>
+
+            <View
+                style="@style/item_divider" />
+
+            <RelativeLayout
+                style="@style/item_setting">
+
+                <TextView
+                    style="@style/item_setting_textview"
+                    android:text="自定义呼吸灯"
+                     />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/light_item_toggle"
+                    style="@style/nimSwitchButton" />
+            </RelativeLayout>
+
+            <View
+                style="@style/item_divider" />
+
+            <RelativeLayout
+                style="@style/item_setting">
+
+                <TextView
+                    style="@style/item_setting_textview"
+                    android:text="通知栏标题定制"
+                     />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/diy_item_toggle"
+                    style="@style/nimSwitchButton" />
+            </RelativeLayout>
+
+            <View
+                style="@style/item_divider" />
+
+            <RelativeLayout
+                style="@style/item_setting">
+
+                <TextView
+                    style="@style/item_setting_textview"
+                    android:text="免打扰"
+                     />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/disturb_item_toggle"
+                    style="@style/nimSwitchButton" />
+            </RelativeLayout>
+
+            <View
+                style="@style/item_divider" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>

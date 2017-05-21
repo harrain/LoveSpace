@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="backdecor">#dad9d9</color>
+    <color name="g_child_page_bg_color">#FFFFFF</color>
+    <color name="color_white_66ffffff">#66ffffff</color>
+</resources>

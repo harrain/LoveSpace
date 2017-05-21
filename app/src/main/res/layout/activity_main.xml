@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <FrameLayout
+        android:id="@+id/hold_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <View
+        android:id="@+id/nav_decor"
+        android:background="#494949"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        />
+
+    <LinearLayout
+        android:id="@+id/home_navbar"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/tab_home"
+                android:background="@drawable/tab_home"
+
+                android:layout_width="@dimen/bottombar_imagewidth"
+                android:layout_height="@dimen/bottombar_imageheight" />
+            <TextView
+                android:text="空间"
+                android:id="@+id/tab_home_tv"
+                android:textSize="@dimen/bottombar_textsize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/tab_chat"
+                android:background="@drawable/tab_chat"
+
+                android:layout_width="@dimen/bottombar_imagewidth"
+                android:layout_height="@dimen/bottombar_imageheight" />
+            <TextView
+                android:text="聊天"
+                android:id="@+id/tab_chat_tv"
+                android:textSize="@dimen/bottombar_textsize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/tab_me"
+                android:background="@drawable/tab_mine"
+
+                android:layout_width="@dimen/bottombar_imagewidth"
+                android:layout_height="@dimen/bottombar_imageheight" />
+            <TextView
+                android:text="我"
+                android:id="@+id/tab_me_tv"
+                android:textSize="@dimen/bottombar_textsize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
