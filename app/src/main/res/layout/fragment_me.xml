@@ -37,25 +37,34 @@
                 android:id="@+id/setting_head"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/setting_headview_paddingtop"
-                android:paddingBottom="@dimen/setting_headview_paddingtop"
                 android:background="@color/color_gray_bfc2c5"
-                >
+                android:paddingBottom="@dimen/setting_headview_paddingtop"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/setting_headview_paddingtop">
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/headview"
-                    app:riv_oval="true"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
-                    android:src="@mipmap/avatar_def" />
+                    android:src="@mipmap/avatar_def"
+                    app:riv_oval="true" />
+
+
+                <TextView
+                    android:id="@+id/nickname_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_toRightOf="@id/headview"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/username"
-                    android:layout_centerInParent="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/nickname_tv"
                     android:layout_marginLeft="20dp"
                     android:layout_toRightOf="@id/headview"
                     android:text="账号："
@@ -63,6 +72,7 @@
 
                 <ImageView
                     style="@style/arrow_right"
+                    android:layout_marginRight="8dp"
                     android:src="@mipmap/arrow_right" />
             </RelativeLayout>
 

@@ -60,6 +60,35 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_below="@+id/attribute"
+        android:layout_marginTop="17dp"
+        android:background="@color/color_split_line_d9d9d9" />
+
+    <include
+        android:id="@+id/nick_layout"
+        layout="@layout/user_profile_edit_item" />
+
+    <include
+        android:id="@+id/gender_layout"
+        layout="@layout/user_profile_edit_item"
+        android:visibility="gone"/>
+
+    <include
+        android:id="@+id/birth_layout"
+        layout="@layout/user_profile_edit_item"
+        android:visibility="gone"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_below="@+id/attribute"
+        android:layout_marginTop="17dp"
+        android:background="@color/color_split_line_d9d9d9" />
+
+
     <Button
         android:id="@+id/settings_button_logout"
         android:layout_width="fill_parent"

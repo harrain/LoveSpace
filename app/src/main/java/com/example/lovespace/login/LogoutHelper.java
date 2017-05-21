@@ -5,7 +5,6 @@ package com.example.lovespace.login;/**
 import com.example.lovespace.DemoCache;
 import com.netease.nim.uikit.LoginSyncDataStatusObserver;
 import com.netease.nim.uikit.NimUIKit;
-import com.netease.nim.uikit.common.ui.drop.DropManager;
 
 /**
  * 包名： com.example.lovespace.login
@@ -21,6 +20,6 @@ public class LogoutHelper {
         NimUIKit.clearCache();
         DemoCache.clear();
         LoginSyncDataStatusObserver.getInstance().reset();
-        DropManager.getInstance().destroy();
+        //DropManager.getInstance().destroy();
     }
 }

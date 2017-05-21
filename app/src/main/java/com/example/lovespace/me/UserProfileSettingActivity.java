@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lovespace.MainActivity;
@@ -36,6 +37,7 @@ import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import java.io.File;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class UserProfileSettingActivity extends UI {
@@ -45,6 +47,12 @@ public class UserProfileSettingActivity extends UI {
     RelativeLayout headLayout;
     @BindView(R.id.settings_button_logout)
     Button btnLogout;
+    @BindView(R.id.nick_layout)
+    RelativeLayout nickLayout;
+    @BindView(R.id.attribute)
+    TextView nickAttr;
+    @BindView(R.id.value)
+    TextView nickValue;
 
     String account;
     private NimUserInfo userInfo;
@@ -62,8 +70,9 @@ public class UserProfileSettingActivity extends UI {
         ToolBarOptions options = new ToolBarOptions();
         options.titleId = R.string.user_information;
         setToolBar(R.id.toolbar, options);
-
+        ButterKnife.bind(this);
         account = getIntent().getStringExtra(Extras.EXTRA_ACCOUNT);
+        nickAttr.setText(R.string.nickname);
     }
 
     public static void startMine(Context context, String account) {
@@ -90,6 +99,8 @@ public class UserProfileSettingActivity extends UI {
         option.cropOutputImageHeight = 720;
         PickImageHelper.pickImage(UserProfileSettingActivity.this, PICK_AVATAR_REQUEST, option);
     }
+
+
 
     /**
      * 注销
@@ -137,7 +148,8 @@ public class UserProfileSettingActivity extends UI {
     }
 
     public void updateUI(){
-
+        userHead.loadBuddyAvatar(account);
+        nickValue.setText(userInfo.getName());
     }
 
     @Override

@@ -12,12 +12,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.lovespace.DemoCache;
-import com.example.lovespace.MainActivity;
 import com.example.lovespace.R;
-import com.example.lovespace.config.preference.Preferences;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.netease.nimlib.sdk.NIMClient;
-import com.netease.nimlib.sdk.auth.AuthService;
+import com.netease.nim.uikit.cache.NimUserInfoCache;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +41,8 @@ public class MeFragment extends Fragment {
     TextView tvUsername;
     @BindView(R.id.setting_head)
     RelativeLayout settingHead;
-
+    @BindView(R.id.nickname_tv)
+    TextView tvNick;
 
 
     @Override
@@ -59,7 +57,9 @@ public class MeFragment extends Fragment {
     }
 
     private void updateHeadView() {
+        String nickname = NimUserInfoCache.getInstance().getUserDisplayName(DemoCache.getAccount());
         tvUsername.setText("账号："+DemoCache.getAccount());
+        tvNick.setText(nickname);
     }
 
     @OnClick(R.id.setting_head)
