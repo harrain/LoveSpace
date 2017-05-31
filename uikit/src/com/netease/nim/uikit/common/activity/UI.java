@@ -29,6 +29,8 @@ public abstract class UI extends AppCompatActivity {
 
     private static Handler handler;
 
+    private Context mContext;
+
     private Toolbar toolbar;
 
     @Override
@@ -38,6 +40,7 @@ public abstract class UI extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
 
         LogUtil.ui("activity: " + getClass().getSimpleName() + " onCreate()");
     }
@@ -117,6 +120,10 @@ public abstract class UI extends AppCompatActivity {
         }
 
         return 0;
+    }
+
+    public Context getmContext() {
+        return mContext;
     }
 
     public void onNavigateUpClicked() {

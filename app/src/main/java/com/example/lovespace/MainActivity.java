@@ -5,16 +5,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.lovespace.chat.ChatFragment;
+import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.home.HomeFragment;
 import com.example.lovespace.login.LoginActivity;
 import com.example.lovespace.login.LogoutHelper;
 import com.example.lovespace.me.MeFragment;
 import com.example.lovespace.session.SessionHelper;
 import com.netease.nim.uikit.common.activity.UI;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.friend.FriendService;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +45,6 @@ public class MainActivity extends UI {
     FragmentManager fm;
     FragmentTransaction ft;
     HomeFragment homeFragment;
-    ChatFragment chatFragment;
     MeFragment meFragment;
 
     private static final String EXTRA_APP_QUIT = "APP_QUIT";
@@ -53,23 +59,23 @@ public class MainActivity extends UI {
         fm = getSupportFragmentManager();
         ft = fm.beginTransaction();
         if (homeFragment == null) homeFragment = new HomeFragment();
-        if (chatFragment == null) chatFragment = new ChatFragment();
         if (meFragment == null) meFragment = new MeFragment();
         ft.add(R.id.hold_fragment,homeFragment);
-        ft.add(R.id.hold_fragment,chatFragment);
         ft.add(R.id.hold_fragment,meFragment);
-        ft.hide(chatFragment);
         ft.hide(meFragment);
         ft.commit();
 
+    }
 
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        searchFriend();
     }
 
     @OnClick(R.id.tab_home)
     public void selectHomeFragment(){
         FragmentTransaction f = fm.beginTransaction();
-        f.hide(chatFragment);
         f.hide(meFragment);
         f.show(homeFragment);
         f.commit();
@@ -83,17 +89,17 @@ public class MainActivity extends UI {
         f.hide(meFragment);
         f.show(chatFragment);
         f.commit();*/
-        if (DemoCache.getAccount().equals("harrain")) {
-            SessionHelper.startP2PSession(this, "steve");
+        String otherAccount = Preferences.getOtherAccount();
+        if (!TextUtils.isEmpty(otherAccount)) {
+            SessionHelper.startP2PSession(this, otherAccount);
         }else {
-            SessionHelper.startP2PSession(this, "harrain");
+            Toast.makeText(this, "您还没添加另一半，不能聊天！", Toast.LENGTH_SHORT).show();
         }
     }
 
     @OnClick(R.id.tab_me)
     public void selectMeFragment(){
         FragmentTransaction f = fm.beginTransaction();
-        f.hide(chatFragment);
         f.hide(homeFragment);
         f.show(meFragment);
         f.commit();
@@ -130,6 +136,19 @@ public class MainActivity extends UI {
         super.onNewIntent(intent);
         setIntent(intent);
         onParseIntent();
+    }
+
+    private void searchFriend(){
+        if (TextUtils.isEmpty(Preferences.getOtherAccount())) {
+            List<String> friendAccounts = NIMClient.getService(FriendService.class).getFriendAccounts();
+            Log.e("frend", friendAccounts.toString());
+            if (friendAccounts.size() > 0) {
+                for (String othername : friendAccounts) {
+                    Preferences.saveOtherAccount(othername);
+                    break;
+                }
+            }
+        }
     }
 
     private void selectHomeBackground(){

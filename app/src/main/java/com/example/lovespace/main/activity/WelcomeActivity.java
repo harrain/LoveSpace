@@ -3,6 +3,7 @@ package com.example.lovespace.main.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.lovespace.DemoCache;
 import com.example.lovespace.MainActivity;
@@ -10,6 +11,10 @@ import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.login.LoginActivity;
 import com.netease.nim.uikit.common.activity.UI;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.friend.FriendService;
+
+import java.util.List;
 
 public class WelcomeActivity extends UI {
 
@@ -69,6 +74,7 @@ public class WelcomeActivity extends UI {
 
                 finish();
             }else {
+                searchFriend();
                 MainActivity.startMine(WelcomeActivity.this);
                 finish();
             }
@@ -83,5 +89,22 @@ public class WelcomeActivity extends UI {
         String account = Preferences.getUserAccount();
         String token = Preferences.getUserToken();
         return !TextUtils.isEmpty(account) && !TextUtils.isEmpty(token);
+    }
+
+    private void load(){
+
+    }
+
+    private void searchFriend(){
+        if (TextUtils.isEmpty(Preferences.getOtherAccount())) {
+            List<String> friendAccounts = NIMClient.getService(FriendService.class).getFriendAccounts();
+            Log.e("frend", friendAccounts.toString());
+            if (friendAccounts.size() > 0) {
+                for (String othername : friendAccounts) {
+                    Preferences.saveOtherAccount(othername);
+                    break;
+                }
+            }
+        }
     }
 }

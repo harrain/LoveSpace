@@ -16,7 +16,11 @@ public class DemoServers {
     private static final String API_SERVER_TEST = "http://223.252.220.238:8080/api/"; // 测试
     private static final String API_SERVER = "https://app.netease.im/api/"; // 线上
 
+    //网易云Web Server
+    private static final String WEB_SERVER = "https://api.netease.im/nimserver/";
+
     public static final String apiServer() {
-        return ServerConfig.testServer() ? API_SERVER_TEST : API_SERVER;
+        return WEB_SERVER;
+        //return ServerConfig.testServer() ? API_SERVER_TEST : API_SERVER;
     }
 }

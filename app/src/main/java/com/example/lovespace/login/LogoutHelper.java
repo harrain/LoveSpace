@@ -3,6 +3,7 @@ package com.example.lovespace.login;/**
  */
 
 import com.example.lovespace.DemoCache;
+import com.example.lovespace.config.preference.Preferences;
 import com.netease.nim.uikit.LoginSyncDataStatusObserver;
 import com.netease.nim.uikit.NimUIKit;
 
@@ -19,7 +20,9 @@ public class LogoutHelper {
         // 清理缓存&注销监听&清除状态
         NimUIKit.clearCache();
         DemoCache.clear();
+        Preferences.clear();
         LoginSyncDataStatusObserver.getInstance().reset();
+
         //DropManager.getInstance().destroy();
     }
 }

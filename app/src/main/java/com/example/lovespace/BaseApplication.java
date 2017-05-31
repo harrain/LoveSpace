@@ -28,12 +28,16 @@ import com.netease.nimlib.sdk.team.model.UpdateTeamAttachment;
 
 import java.util.Map;
 
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobConfig;
+
 /**
  * Created by stephen on 2017/4/22.
  */
 
 public class BaseApplication extends Application {
 
+    private static final String BOMB_APPCATION_ID = "27bc225df548d8d318d4e751c7e5b0ed";
 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
@@ -44,6 +48,7 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+        initBomb();
         DemoCache.setContext(this);
         // 注册小米推送appID 、appKey 以及在云信管理后台添加的小米推送证书名称，该逻辑放在 NIMClient init 之前
         NIMPushClient.registerMiPush(this, "DEMOMIPUSH", "2882303761517573419", "5591757313419");
@@ -65,6 +70,20 @@ public class BaseApplication extends Application {
             // 初始化消息提醒
             NIMClient.toggleNotification(UserPreferences.getNotificationToggle());
         }
+    }
+
+    private void initBomb(){
+        BmobConfig config =new BmobConfig.Builder(this)
+                //设置appkey
+                .setApplicationId(BOMB_APPCATION_ID)
+                //请求超时时间（单位为秒）：默认15s
+                .setConnectTimeout(30)
+                //文件分片上传时每片的大小（单位字节），默认512*1024
+                .setUploadBlockSize(1024*1024)
+                //文件的过期时间(单位为秒)：默认1800s
+                .setFileExpiration(2500)
+                .build();
+        Bmob.initialize(config);
     }
 
     private LoginInfo getLoginInfo() {

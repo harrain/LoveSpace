@@ -13,6 +13,7 @@ public class Preferences {
 
     private static final String KEY_USER_ACCOUNT = "account";
     private static final String KEY_USER_TOKEN = "token";
+    private static final String KEY_OTHER = "other";
 
     public static void saveUserAccount(String account) {
         saveString(KEY_USER_ACCOUNT, account);
@@ -30,6 +31,21 @@ public class Preferences {
         return getString(KEY_USER_TOKEN);
     }
 
+    public static void saveOtherAccount(String account) {
+        saveString(KEY_OTHER, account);
+    }
+
+    public static String getOtherAccount() {
+        return getString(KEY_OTHER);
+    }
+
+    public static void clear(){
+        saveUserAccount("");
+        saveUserToken("");
+        saveOtherAccount("");
+
+    }
+
     private static void saveString(String key, String value) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putString(key, value);
@@ -40,7 +56,13 @@ public class Preferences {
         return getSharedPreferences().getString(key, null);
     }
 
+
+
     static SharedPreferences getSharedPreferences() {
-        return DemoCache.getContext().getSharedPreferences("lovespace", Context.MODE_PRIVATE);
+        return DemoCache.getContext().getSharedPreferences("lovespace_user", Context.MODE_PRIVATE);
     }
+
+    /*static SharedPreferences getSharedPreferences() {
+        return DemoCache.getContext().getSharedPreferences("lovespace."+DemoCache.getAccount(), Context.MODE_PRIVATE);
+    }*/
 }

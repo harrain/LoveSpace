@@ -77,6 +77,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/add_buddy_rl"
                 style="@style/item_setting">
 
                 <ImageView
@@ -94,6 +95,34 @@
                     android:layout_centerVertical="true"
                     android:text="添加另一半"
                      />
+
+                <ImageView
+                    style="@style/arrow_right"
+                    android:src="@mipmap/arrow_right" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/buddy_account_rl"
+                style="@style/item_setting"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/buddy_head_iv"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:scaleType="centerCrop"
+                     />
+
+                <TextView
+                    android:id="@+id/buddy_name_tv"
+                    style="@style/item_setting_textview"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@id/buddy_head_iv"
+                    android:layout_centerVertical="true"
+                    android:text="@string/other_acount"
+                    />
 
                 <ImageView
                     style="@style/arrow_right"
