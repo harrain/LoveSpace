@@ -195,15 +195,13 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/location_navigate"
             android:screenOrientation="portrait" />
-
-
-
         <activity android:name=".me.UserProfileSettingActivity" />
         <activity android:name=".me.UserProfileActivity" />
         <activity android:name=".me.UserProfileEditItemActivity" />
         <activity android:name=".me.AddFriendActivity" />
         <activity android:name=".home.GalaryActivity" />
-        <activity android:name=".home.GalaryInfoActivity"/>
+        <activity android:name=".home.GalaryInfoActivity" />
+        <activity android:name=".home.annversary.AnnversaryActivity"></activity>
     </application>
 
 </manifest>
