@@ -1,3 +1,4 @@
+
 package com.example.lovespace.login;
 
 import android.Manifest;
@@ -25,7 +26,6 @@ import com.netease.nim.uikit.common.activity.UI;
 import com.netease.nim.uikit.common.ui.dialog.DialogMaker;
 import com.netease.nim.uikit.common.ui.widget.ClearableEditTextWithIcon;
 import com.netease.nim.uikit.common.util.log.LogUtil;
-import com.netease.nim.uikit.common.util.string.MD5;
 import com.netease.nim.uikit.common.util.sys.NetworkUtil;
 import com.netease.nim.uikit.common.util.sys.ScreenUtil;
 import com.netease.nim.uikit.model.ToolBarOptions;
@@ -224,7 +224,7 @@ public class LoginActivity extends UI implements View.OnKeyListener{
         // 这里为了简便起见，demo就直接使用了密码的md5作为token。
         // 如果开发者直接使用这个demo，只更改appkey，然后就登入自己的账户体系的话，需要传入同步到云信服务器的token，而不是用户密码。
         final String account = loginAccountEdit.getEditableText().toString().toLowerCase();
-        final String token = MD5.getStringMD5(loginPasswordEdit.getEditableText().toString());
+        final String token = loginPasswordEdit.getEditableText().toString();
         // 登录
         loginRequest = NimUIKit.doLogin(new LoginInfo(account, token), new RequestCallback<LoginInfo>() {
             @Override

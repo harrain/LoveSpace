@@ -5,37 +5,26 @@
     android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:maxHeight="90dp">
+    >
 
     <TextView
         android:text="womenziayiqi"
         android:textSize="20sp"
-        android:id="@+id/titlecommon"
-        android:layout_marginTop="30dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/startday"
+        android:id="@+id/title_content"
         android:layout_marginTop="10dp"
-        android:textSize="16sp"
-        android:text="起始日："
-        android:layout_marginBottom="30dp"
-        android:layout_below="@id/titlecommon"
+        android:layout_marginBottom="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+
     <TextView
-        android:id="@+id/daycount_tv"
+        android:id="@+id/day_tv"
         android:layout_alignParentRight="true"
-        android:textSize="40sp"
+        android:textSize="26sp"
         android:text="天"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <View
-        android:layout_below="@id/startday"
-        android:background="@color/backdecor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+
 </RelativeLayout>
