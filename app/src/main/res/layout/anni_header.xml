@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:maxHeight="90dp">
 
     <TextView
-        android:text="womenziayiqi"
+        android:text="我们在一起"
         android:textSize="20sp"
         android:id="@+id/titlecommon"
         android:layout_marginTop="30dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
@@ -19,6 +19,8 @@
         android:layout_marginTop="10dp"
         android:textSize="16sp"
         android:text="起始日："
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="30dp"
         android:layout_below="@id/titlecommon"
         android:layout_width="wrap_content"
@@ -29,6 +31,7 @@
         android:layout_alignParentRight="true"
         android:textSize="40sp"
         android:text="天"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -37,5 +40,5 @@
         android:layout_below="@id/startday"
         android:background="@color/backdecor"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="15dp"/>
 </RelativeLayout>

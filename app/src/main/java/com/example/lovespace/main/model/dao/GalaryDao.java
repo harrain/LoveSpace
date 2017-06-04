@@ -84,9 +84,11 @@ public class GalaryDao {
                         listener.onSuccess(list);
                         //galarys.addAll(list);
                     }else{
+                        listener.onFailure(e);
                         Log.e(TAG, "查询成功，无数据返回");
                     }
                 }else{
+                    listener.onFailure(e);
                     Log.e(TAG, "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
                 }
             }

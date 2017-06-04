@@ -67,13 +67,14 @@ public class GalaryInfoActivity extends UI {
     private String gname;
     private int imageCount;
     private String cid;
+    private String gtime;
+    private int isum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_galary_info);
         ButterKnife.bind(this);
-
 
         setSupportActionBar(toolbar);
         if (toolbar != null) {
@@ -89,8 +90,18 @@ public class GalaryInfoActivity extends UI {
         Intent intent = getIntent();
         gid = intent.getStringExtra("gid");
         gname = intent.getStringExtra("gname");
+        gtime = intent.getStringExtra("gtime");
+        isum = intent.getIntExtra("isum",0);
+        setUpView();
+
         cid = Preferences.getCoupleId();
         loadData();
+    }
+
+    private void setUpView() {
+        giTitleTv.setText(gname);
+        subtext.setText(gtime+"-"+isum+"枚");
+        imageCount = isum;
     }
 
     private void loadData() {

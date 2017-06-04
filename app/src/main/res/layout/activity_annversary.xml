@@ -6,30 +6,20 @@
     android:layout_height="match_parent"
     tools:context="com.example.lovespace.home.annversary.AnnversaryActivity">
 
-    <android.support.v7.widget.Toolbar
+    <include
         android:id="@+id/toolbar"
-        android:navigationIcon="@drawable/ab_actionbar_back_icon"
-        android:title="纪念日"
-        android:background="@android:color/holo_red_dark"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
-        <ImageButton
-            android:id="@+id/anni_add_btn"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ab_common_add_icon"
-            android:background="@android:color/transparent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+        layout="@layout/titlebarthree"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/anni_rv"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <ProgressBar
+        android:id="@+id/anni_pb"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

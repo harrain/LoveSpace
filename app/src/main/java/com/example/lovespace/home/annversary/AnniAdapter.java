@@ -5,11 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.lovespace.R;
 import com.example.lovespace.main.model.bean.Anni;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,11 +30,14 @@ public class AnniAdapter extends RecyclerView.Adapter {
     List<Anni> annis;
     Context mContext;
 
-    List<FooterBean> footerBeens;
+    List<FooterBean> footerBeens = new ArrayList<>();
 
     public AnniAdapter(Context context, List list) {
         this.mContext = context;
-        annis = list;
+
+        footerBeens.clear();
+        annis= list;
+        initFooterBean();
     }
 
     @Override
@@ -64,6 +70,15 @@ public class AnniAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof FooterHolder) {
+            int index;
+            if (annis!= null) {
+                 index = position - annis.size() - 1;
+            }else {
+                index = position - 1;
+            }
+            ((FooterHolder)holder).bind(index);
+        }
 
     }
 
@@ -78,7 +93,8 @@ public class AnniAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return 1 + annis.size() + footerBeens.size();
+
+        return annis == null?1+footerBeens.size():1 + annis.size() + footerBeens.size();
     }
 
     class FooterBean {
@@ -88,6 +104,22 @@ public class AnniAdapter extends RecyclerView.Adapter {
         public FooterBean(int id, String text) {
             iconid = id;
             title = text;
+        }
+
+        public int getIconid() {
+            return iconid;
+        }
+
+        public void setIconid(int iconid) {
+            this.iconid = iconid;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
         }
     }
 
@@ -118,10 +150,18 @@ public class AnniAdapter extends RecyclerView.Adapter {
     class FooterHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.title_footer)
         TextView titleFooter;
+        @BindView(R.id.anni_cover)
+        ImageView anniCover;
+        @BindView(R.id.add_anni)
+        ImageButton addAnni;
 
         FooterHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+        public void bind(int position){
+            anniCover.setImageResource(footerBeens.get(position).getIconid());
+            titleFooter.setText(footerBeens.get(position).getTitle());
         }
     }
 }

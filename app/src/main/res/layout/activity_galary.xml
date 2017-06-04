@@ -20,6 +20,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <TextView
+                android:text="相册"
+                android:textSize="20sp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
             <ImageButton
                 android:id="@+id/create_galary_btn"
                 android:src="@mipmap/galary_add_icon"

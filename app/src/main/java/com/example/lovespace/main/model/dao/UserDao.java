@@ -56,6 +56,7 @@ public class UserDao {
                         listener.onSuccess(objects);
                     }
                 }else{
+                    listener.onFailure(e);
                     Log.e(TAG,"查询失败："+e.getMessage());
                 }
             }

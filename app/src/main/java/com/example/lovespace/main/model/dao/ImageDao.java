@@ -55,8 +55,10 @@ public class ImageDao {
                         listener.onSuccess(list);
                     }else{
                         Log.e(TAG, "查询成功，无数据返回");
+                        listener.onFailure(e);
                     }
                 }else{
+                    listener.onFailure(e);
                     Log.e(TAG, "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
                 }
             }

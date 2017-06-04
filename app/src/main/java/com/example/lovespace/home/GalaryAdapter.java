@@ -47,6 +47,8 @@ public class GalaryAdapter extends RecyclerView.Adapter<GalaryAdapter.GalaryHold
                 Intent intent = new Intent(mContext, GalaryInfoActivity.class);
                 intent.putExtra("gid",galaryList.get(position).getObjectId());
                 intent.putExtra("gname",galaryList.get(position).getGalaryname());
+                intent.putExtra("gtime",galaryList.get(position).getCreatedAt());
+                intent.putExtra("isum",galaryList.get(position).getImagenum());
                 mContext.startActivity(intent);
 
             }
