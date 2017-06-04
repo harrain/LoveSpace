@@ -1,4 +1,4 @@
-package com.example.lovespace.main.model;
+package com.example.lovespace.main.model.bean;
 
 import cn.bmob.v3.BmobObject;
 
@@ -11,6 +11,9 @@ public class Couple extends BmobObject {
     private String girlname;
 
     private String boyname;
+
+
+
 
     public String getGirlname() {
         return girlname;
@@ -26,5 +29,14 @@ public class Couple extends BmobObject {
 
     public void setBoyname(String boyname) {
         this.boyname = boyname;
+    }
+
+    @Override
+    public String toString() {
+        return "Couple{" +
+                "objectId='" + getObjectId() + '\'' +
+                ", girlname='" + girlname + '\'' +
+                ", boyname='" + boyname + '\'' +
+                '}';
     }
 }

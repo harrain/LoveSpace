@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.lovespace.R;
+import com.example.lovespace.main.model.bean.Galary;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,9 +25,11 @@ import butterknife.ButterKnife;
 public class GalaryAdapter extends RecyclerView.Adapter<GalaryAdapter.GalaryHolder> {
 
     private Context mContext;
+    private List<Galary> galaryList;
 
-    public GalaryAdapter(Context context) {
+    public GalaryAdapter(Context context,List<Galary> list) {
         this.mContext = context;
+        galaryList = list;
     }
 
     @Override
@@ -35,19 +40,23 @@ public class GalaryAdapter extends RecyclerView.Adapter<GalaryAdapter.GalaryHold
     }
 
     @Override
-    public void onBindViewHolder(GalaryHolder holder, int position) {
+    public void onBindViewHolder(GalaryHolder holder, final int position) {
         holder.galaryItemview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, GalaryInfoActivity.class);
+                intent.putExtra("gid",galaryList.get(position).getObjectId());
+                intent.putExtra("gname",galaryList.get(position).getGalaryname());
                 mContext.startActivity(intent);
+
             }
         });
+        holder.bind(position);
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return galaryList == null?0:galaryList.size();
     }
 
     class GalaryHolder extends RecyclerView.ViewHolder{
@@ -65,6 +74,17 @@ public class GalaryAdapter extends RecyclerView.Adapter<GalaryAdapter.GalaryHold
         GalaryHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+        public void bind(int position) {
+            try {
+
+                galaryTitleTv.setText(galaryList.get(position).getGalaryname());
+                galaryDateTv.setText(galaryList.get(position).getCreatedAt());
+                photoSumCoverTv.setText(galaryList.get(position).getImagenum()+"");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 }

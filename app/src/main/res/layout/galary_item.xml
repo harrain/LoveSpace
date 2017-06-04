@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/galary_itemview"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
         
         <ImageView
             android:id="@+id/galary_cover"
             android:src="@drawable/album_default_cover_0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"/>
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:scaleType="fitXY"/>
 
         <View
             android:id="@+id/galary_label"

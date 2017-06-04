@@ -201,7 +201,8 @@
         <activity android:name=".me.AddFriendActivity" />
         <activity android:name=".home.GalaryActivity" />
         <activity android:name=".home.GalaryInfoActivity" />
-        <activity android:name=".home.annversary.AnnversaryActivity"></activity>
+        <activity android:name=".home.annversary.AnnversaryActivity" />
+        <activity android:name=".home.CreateGalaryActivity"></activity>
     </application>
 
 </manifest>

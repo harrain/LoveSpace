@@ -1,8 +1,9 @@
-package com.example.lovespace.main.model;
+package com.example.lovespace.main.model.dao;
 
 import android.util.Log;
 
 import com.example.lovespace.config.preference.Preferences;
+import com.example.lovespace.main.model.bean.Couple;
 
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;

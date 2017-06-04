@@ -4,10 +4,8 @@
     android:id="@+id/galaryinfo_iv"
     android:src="@drawable/album_default_cover_0"
     android:scaleType="centerCrop"
-    android:maxWidth="80dp"
-    android:maxHeight="80dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="140dp">
 
 
 

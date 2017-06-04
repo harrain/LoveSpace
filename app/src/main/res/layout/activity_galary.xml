@@ -11,25 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"
+        android:title="相册"
         app:navigationIcon="@mipmap/ic_toolbar_back"
         android:background="@color/color_red_f04c62">
 
         <RelativeLayout
+            android:background="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:text="相册"
-                android:textSize="18sp"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
             <ImageButton
                 android:id="@+id/create_galary_btn"
                 android:src="@mipmap/galary_add_icon"
                 android:background="@android:color/transparent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:maxWidth="30dp"
@@ -58,5 +55,11 @@
         android:layout_below="@id/galary_num_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <ProgressBar
+        android:id="@+id/galary_pb"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
