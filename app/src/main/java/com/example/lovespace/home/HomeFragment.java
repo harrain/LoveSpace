@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.lovespace.R;
+import com.example.lovespace.home.alarm.AlarmActivity;
 import com.example.lovespace.home.annversary.AnnversaryActivity;
 
 import butterknife.BindView;
@@ -54,6 +55,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 startActivity(new Intent(mContext,GalaryActivity.class));
                 break;
             case 2:
+                startActivity(new Intent(mContext, AlarmActivity.class));
                 break;
             case 3:
                 break;

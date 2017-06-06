@@ -1,9 +1,13 @@
 package com.example.lovespace.home.annversary;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -32,12 +36,14 @@ public class CreateAnniActivity extends AppCompatActivity {
     @BindView(R.id.date_picker)
     RelativeLayout datePicker;
     private static String TAG = "CreateAnniActivity";
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_anni);
         ButterKnife.bind(this);
+        mContext = this;
         add.setImageResource(R.drawable.done_icon);
         title.setText("创建纪念日");
     }
@@ -66,6 +72,13 @@ public class CreateAnniActivity extends AppCompatActivity {
 
     @OnClick(R.id.date_picker)
     public void onDatePickerClicked() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        View view = View.inflate(mContext,R.layout.date_picker_view,null);
+        builder.setView(view);
+        Button cancel = (Button) view.findViewById(R.id.cancel_b);
+        Button set = (Button) view.findViewById(R.id.set_b);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
