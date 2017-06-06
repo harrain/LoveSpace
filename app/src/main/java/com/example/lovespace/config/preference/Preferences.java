@@ -14,6 +14,42 @@ public class Preferences {
     private static final String KEY_USER_ACCOUNT = "account";
     private static final String KEY_USER_TOKEN = "token";
     private static final String KEY_OTHER = "other";
+    private static final String KEY_USER_ID = "user_objectid";
+    private static final String KEY_USER_SEX = "user_sex";
+    private static final String KEY_USER_BIRTH = "user_birth";
+    private static final String KEY_COUPLE_ID = "coupleid";
+
+    public static void saveUserId(String uid){
+        saveString(KEY_USER_ID,uid);
+    }
+
+    public static String getUserId(){
+        return getString(KEY_USER_ID);
+    }
+
+    public static void saveUserSex(String sex){
+        saveString(KEY_USER_SEX,sex);
+    }
+
+    public static String getUserSex(){
+        return getString(KEY_USER_SEX);
+    }
+
+    public static void saveUserBirth(String birth){
+        saveString(KEY_USER_BIRTH,birth);
+    }
+
+    public static String getUserBirth(){
+        return getString(KEY_USER_BIRTH);
+    }
+
+    public static void saveCoupleId(String cid){
+        saveString(KEY_COUPLE_ID,cid);
+    }
+
+    public static String getCoupleId(){
+        return getString(KEY_COUPLE_ID);
+    }
 
     public static void saveUserAccount(String account) {
         saveString(KEY_USER_ACCOUNT, account);

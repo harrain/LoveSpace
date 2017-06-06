@@ -2,12 +2,16 @@ package com.example.lovespace.home;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.example.lovespace.R;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,9 +24,17 @@ public class GalaryInfoAdapter extends RecyclerView.Adapter <GalaryInfoAdapter.I
 
 
     private Context mContext;
+    private List<String> imagePaths;
+    private static  final String TAG = "GalaryInfoAdapter";
 
-    public GalaryInfoAdapter(Context context) {
+    public GalaryInfoAdapter(Context context, List<String> list) {
         mContext = context;
+        imagePaths = list;
+        if (imagePaths == null) {
+            Log.e(TAG, "image集合空");
+        }else {
+            Log.e(TAG,"imagepath0:"+imagePaths.size());
+        }
     }
 
 
@@ -35,12 +47,18 @@ public class GalaryInfoAdapter extends RecyclerView.Adapter <GalaryInfoAdapter.I
 
     @Override
     public void onBindViewHolder(ImageHolder holder, int position) {
-
+        Log.e(TAG,"imagePath:"+imagePaths.get(position));
+        Glide.with(mContext).load(imagePaths.get(position)).into(holder.galaryinfoIv);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        if (imagePaths == null) {
+            Log.e(TAG, "imagecount空");
+        }else {
+            Log.e(TAG,"imagepath1:"+imagePaths.size());
+        }
+        return imagePaths == null ? 0 : imagePaths.size();
     }
 
     class ImageHolder extends RecyclerView.ViewHolder{

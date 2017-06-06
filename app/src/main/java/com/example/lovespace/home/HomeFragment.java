@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.lovespace.R;
+import com.example.lovespace.home.annversary.AnnversaryActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +48,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position){
             case 0:
+                startActivity(new Intent(mContext, AnnversaryActivity.class));
                 break;
             case 1:
                 startActivity(new Intent(mContext,GalaryActivity.class));

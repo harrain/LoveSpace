@@ -9,7 +9,10 @@ import com.example.lovespace.DemoCache;
 import com.example.lovespace.MainActivity;
 import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
+import com.example.lovespace.listener.OnCompleteListener;
 import com.example.lovespace.login.LoginActivity;
+import com.example.lovespace.main.model.bean.User;
+import com.example.lovespace.main.model.dao.UserDao;
 import com.netease.nim.uikit.common.activity.UI;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.friend.FriendService;
@@ -23,6 +26,7 @@ public class WelcomeActivity extends UI {
     private boolean customSplash = false;
 
     private static boolean firstEnter = true; // 是否首次进入
+    private String account;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,7 @@ public class WelcomeActivity extends UI {
 
                 finish();
             }else {
+                load();
                 searchFriend();
                 MainActivity.startMine(WelcomeActivity.this);
                 finish();
@@ -86,13 +91,47 @@ public class WelcomeActivity extends UI {
      * @return
      */
     private boolean canAutoLogin() {
-        String account = Preferences.getUserAccount();
+        account = Preferences.getUserAccount();
         String token = Preferences.getUserToken();
         return !TextUtils.isEmpty(account) && !TextUtils.isEmpty(token);
     }
 
     private void load(){
+        UserDao.queryUserInfo(account, new OnCompleteListener<List<User>>() {
+            @Override
+            public void onSuccess(List<User> data) {
+                if (data.size() == 1){
+                    User user = data.get(0);
+                    Log.e(TAG,user.toString());
+                    saveTolocal(user);
+                }else {
+                    Log.e(TAG,"数据源出错，有"+data.size()+"个同名昵称用户");
+                }
+            }
 
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+
+
+    }
+
+    private void saveTolocal(User user) {
+        try {
+
+            if (Preferences.getUserId() == null)
+                Preferences.saveUserId(user.getObjectId());
+            if (Preferences.getUserSex() == null)
+                Preferences.saveUserSex(user.getSex());
+            if (Preferences.getCoupleId() == null)
+                Preferences.saveCoupleId(user.getCoupleid());
+            if (Preferences.getUserBirth() == null)
+                Preferences.saveUserBirth(user.getBirth().toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void searchFriend(){
