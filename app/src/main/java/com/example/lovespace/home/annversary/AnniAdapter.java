@@ -10,9 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.lovespace.R;
+import com.example.lovespace.common.util.DateUtil;
 import com.example.lovespace.main.model.bean.Anni;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,6 +33,7 @@ public class AnniAdapter extends RecyclerView.Adapter {
     Context mContext;
 
     List<FooterBean> footerBeens = new ArrayList<>();
+    private DateUtil dateUtil;
 
     public AnniAdapter(Context context, List list) {
         this.mContext = context;
@@ -70,14 +73,18 @@ public class AnniAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        int index;
         if (holder instanceof FooterHolder) {
-            int index;
+
             if (annis!= null) {
                  index = position - annis.size() - 1;
             }else {
                 index = position - 1;
             }
             ((FooterHolder)holder).bind(index);
+        }else if (holder instanceof ContentHolder){
+            index = position - 1;
+            ((ContentHolder)holder).bind(index);
         }
 
     }
@@ -140,10 +147,53 @@ public class AnniAdapter extends RecyclerView.Adapter {
         TextView titleContent;
         @BindView(R.id.day_tv)
         TextView dayTv;
+        @BindView(R.id.yearmonth_tv)
+        TextView ymTv;
+        @BindView(R.id.date_tv)
+        TextView dateTv;
 
         ContentHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+        public void bind(int index) {
+            String day = annis.get(index).getAnnidate();
+
+            dateUtil = new DateUtil();
+            List<Integer> list = dateUtil.string2int(day);
+
+            ymTv.setText(list.get(0)+" "+list.get(1));
+            dateTv.setText(list.get(2));
+
+            Date date = new Date();
+            int anniday = countAnnidays(list.get(0),list.get(1),list.get(2));
+            List<Integer> currents = dateUtil.string2int(dateUtil.date2string(date));
+            int currentday = countAnnidays(currents.get(0),currents.get(1),currents.get(2));
+            if (dateUtil.date2long(day) > dateUtil.date2long(date)){
+                titleContent.setText(annis.get(index).getAnniname() +" 还有");
+                dayTv.setText(anniday-currentday+"天");
+
+            }else {
+                titleContent.setText(annis.get(index).getAnniname() +" 已经");
+                dayTv.setText(currentday-anniday+"天");
+            }
+
+        }
+
+        public int countAnnidays(int year,int month,int day){
+            dateUtil.year = year;
+            dateUtil.month = month;
+            dateUtil.day = day;
+            return dateUtil.countDays();
+
+        }
+
+        public int countCurrentdays(int year,int month,int day){
+            dateUtil.year = year;
+            dateUtil.month = month;
+            dateUtil.day = day;
+            return dateUtil.countDays();
         }
     }
 

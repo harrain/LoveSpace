@@ -204,7 +204,8 @@
         <activity android:name=".home.annversary.AnnversaryActivity" />
         <activity android:name=".home.CreateGalaryActivity" />
         <activity android:name=".home.annversary.CreateAnniActivity" />
-        <activity android:name=".home.alarm.AlarmActivity"></activity>
+        <activity android:name=".home.alarm.AlarmActivity" />
+        <activity android:name=".home.alarm.CreateAlarmActivity"></activity>
     </application>
 
 </manifest>

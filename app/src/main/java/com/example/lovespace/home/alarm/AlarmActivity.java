@@ -1,9 +1,11 @@
 package com.example.lovespace.home.alarm;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.example.lovespace.R;
 import com.example.lovespace.home.SpaceItemDecoration;
@@ -30,6 +32,13 @@ public class AlarmActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         title.setText("闹钟");
         initRecyclerView();
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AlarmActivity.this,CreateAlarmActivity.class));
+            }
+        });
 
     }
 
