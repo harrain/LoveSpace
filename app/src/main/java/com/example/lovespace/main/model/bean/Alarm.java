@@ -12,13 +12,15 @@ public class Alarm extends BmobObject {
     private String coupleid;
     private String alarmname;
     private String alarmtime;
+    private Boolean isClose;
 
     public Alarm(){}
-    public Alarm(String name,String time,String cid,String uid){
+    public Alarm(String name,String time,String cid,String uid,Boolean isClose ){
         alarmname = name;
         alarmtime = time;
         coupleid = cid;
         userid = uid;
+        this.isClose = isClose;
     }
 
     public String getUserid() {
@@ -53,6 +55,14 @@ public class Alarm extends BmobObject {
         this.alarmtime = alarmtime;
     }
 
+    public Boolean getClose() {
+        return isClose;
+    }
+
+    public void setClose(Boolean close) {
+        isClose = close;
+    }
+
     @Override
     public String toString() {
         return "Alarm{" +
@@ -61,6 +71,7 @@ public class Alarm extends BmobObject {
                 ", coupleid='" + coupleid + '\'' +
                 ", alarmname='" + alarmname + '\'' +
                 ", alarmtime='" + alarmtime + '\'' +
+                ", isClose ='" + isClose + '\'' +
                 '}';
     }
 }

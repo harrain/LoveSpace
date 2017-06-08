@@ -37,6 +37,8 @@ public class CreateAnniActivity extends AppCompatActivity {
     EditText anameEt;
     @BindView(R.id.date_picker)
     RelativeLayout datePicker;
+    @BindView(R.id.dt)
+    TextView dt;
     private static String TAG = "CreateAnniActivity";
     private Context mContext;
 
@@ -110,6 +112,7 @@ public class CreateAnniActivity extends AppCompatActivity {
             mMonth = monthOfYear;
             mDay = dayOfMonth;
             Log.e(TAG,mYear+"-"+mMonth+"-"+mDay);
+            dt.setText(mYear+"-"+mMonth+"-"+mDay);
         }
     };
 

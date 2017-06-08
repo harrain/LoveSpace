@@ -26,7 +26,7 @@ public class AnniDao {
     private static String TAG = "AnniDao";
 
     public static void fetchAnnis(String uid, String cid, final OnCompleteListener<List<Anni>> listener){
-        String bql = "select * from Anni where userid = '"+uid+"' or where coupleid = '"+cid+"'";
+        String bql = "select * from Anni where coupleid = '"+cid+"'";
         BmobQuery<Anni> query = new BmobQuery<>();
         query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.doSQLQuery(bql, new SQLQueryListener<Anni>() {

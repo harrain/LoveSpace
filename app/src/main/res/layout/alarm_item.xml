@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="30dp"
@@ -28,6 +29,11 @@
         android:id="@+id/switch_compat"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:textColor="@color/white"
+        android:textOn="开"
+        android:textOff="关"
+        android:checked="true"
+        app:showText="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </RelativeLayout>
