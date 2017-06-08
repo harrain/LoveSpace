@@ -120,7 +120,6 @@ public class WelcomeActivity extends UI {
 
     private void saveTolocal(User user) {
         try {
-
             if (Preferences.getUserId() == null)
                 Preferences.saveUserId(user.getObjectId());
             if (Preferences.getUserSex() == null)

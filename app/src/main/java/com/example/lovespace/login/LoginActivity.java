@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +23,9 @@ import com.example.lovespace.MainActivity;
 import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.config.preference.UserPreferences;
+import com.example.lovespace.listener.OnCompleteListener;
+import com.example.lovespace.main.model.bean.User;
+import com.example.lovespace.main.model.dao.UserDao;
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.common.activity.UI;
 import com.netease.nim.uikit.common.ui.dialog.DialogMaker;
@@ -38,6 +43,9 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.auth.LoginInfo;
+import com.netease.nimlib.sdk.friend.FriendService;
+
+import java.util.List;
 
 
 public class LoginActivity extends UI implements View.OnKeyListener{
@@ -61,11 +69,9 @@ public class LoginActivity extends UI implements View.OnKeyListener{
     private boolean registerMode = false; // 注册模式
     private boolean registerPanelInited = false; // 注册面板是否初始化
 
-
-    private EditText account;//用户名
-    private EditText passwd;//密码
-    private Button login;//登录
     private String TAG = "Login";
+    private String account;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,8 +158,8 @@ public class LoginActivity extends UI implements View.OnKeyListener{
         loginPasswordEdit.addTextChangedListener(textWatcher);
         loginPasswordEdit.setOnKeyListener(this);
 
-        String account = Preferences.getUserAccount();
-        loginAccountEdit.setText(account);
+        String account1 = Preferences.getUserAccount();
+        loginAccountEdit.setText(account1);
     }
 
     /**
@@ -223,9 +229,11 @@ public class LoginActivity extends UI implements View.OnKeyListener{
         // 在这里直接使用同步到云信服务器的帐号和token登录。
         // 这里为了简便起见，demo就直接使用了密码的md5作为token。
         // 如果开发者直接使用这个demo，只更改appkey，然后就登入自己的账户体系的话，需要传入同步到云信服务器的token，而不是用户密码。
-        final String account = loginAccountEdit.getEditableText().toString().toLowerCase();
-        final String token = loginPasswordEdit.getEditableText().toString();
+        account = loginAccountEdit.getEditableText().toString().toLowerCase();
+        token = loginPasswordEdit.getEditableText().toString();
         // 登录
+
+        //修改了NimUIKit的默认登录方法，因为其中的接口都是demo的。修改appkey要修改URL和传入的header
         loginRequest = NimUIKit.doLogin(new LoginInfo(account, token), new RequestCallback<LoginInfo>() {
             @Override
             public void onSuccess(LoginInfo param) {
@@ -235,6 +243,8 @@ public class LoginActivity extends UI implements View.OnKeyListener{
 
                 DemoCache.setAccount(account);
                 saveLoginInfo(account, token);
+                load();
+                searchFriend();
 
                 // 初始化消息提醒配置
                 initNotificationConfig();
@@ -279,6 +289,54 @@ public class LoginActivity extends UI implements View.OnKeyListener{
     private void onLoginDone() {
         loginRequest = null;
         DialogMaker.dismissProgressDialog();
+    }
+
+    private void load(){
+        UserDao.queryUserInfo(account, new OnCompleteListener<List<User>>() {
+            @Override
+            public void onSuccess(List<User> data) {
+                if (data.size() == 1){
+                    User user = data.get(0);
+                    Log.e(TAG,user.toString());
+                    saveTolocal(user);
+                }else {
+                    Log.e(TAG,"数据源出错，有"+data.size()+"个同名昵称用户");
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+    }
+
+    private void saveTolocal(User user) {
+        try {
+            if (Preferences.getUserId() == null)
+                Preferences.saveUserId(user.getObjectId());
+            if (Preferences.getUserSex() == null)
+                Preferences.saveUserSex(user.getSex());
+            if (Preferences.getCoupleId() == null)
+                Preferences.saveCoupleId(user.getCoupleid());
+            if (Preferences.getUserBirth() == null)
+                Preferences.saveUserBirth(user.getBirth().toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void searchFriend(){
+        if (TextUtils.isEmpty(Preferences.getOtherAccount())) {
+            List<String> friendAccounts = NIMClient.getService(FriendService.class).getFriendAccounts();
+            Log.e("frend", friendAccounts.toString());
+            if (friendAccounts.size() > 0) {
+                for (String othername : friendAccounts) {
+                    Preferences.saveOtherAccount(othername);
+                    break;
+                }
+            }
+        }
     }
 
     /*private void login(){
@@ -357,10 +415,11 @@ public class LoginActivity extends UI implements View.OnKeyListener{
         final String account = registerAccountEdit.getText().toString();
         final String nickName = registerNickNameEdit.getText().toString();
         final String password = registerPasswordEdit.getText().toString();
-
+//修改了NimUIKit的默认登录方法，因为其中的接口都是demo的。修改appkey要修改URL和传入的header
         ContactHttpClient.getInstance().register(account, nickName, password, new ContactHttpClient.ContactHttpCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                UserDao.addToBomb(account,nickName,password,,null,null);
                 Toast.makeText(LoginActivity.this, R.string.register_success, Toast.LENGTH_SHORT).show();
                 switchMode();  // 切换回登录
                 loginAccountEdit.setText(account);
