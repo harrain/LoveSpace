@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp"
+    android:paddingTop="30dp"
+    android:paddingBottom="30dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -9,7 +9,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:id="@+id/anni_cover"
-        android:scaleType="centerInside"
+        android:scaleType="fitCenter"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_width="35dp"
         android:layout_height="35dp" />
@@ -30,6 +30,6 @@
         android:src="@drawable/ab_life_add_btn_img"
         android:scaleType="fitXY"
         android:background="@android:color/transparent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
 </RelativeLayout>

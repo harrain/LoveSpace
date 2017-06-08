@@ -6,38 +6,23 @@
     android:layout_height="match_parent"
     tools:context="com.example.lovespace.home.alarm.AlarmActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:navigationIcon="@drawable/ab_actionbar_back_icon"
-        android:background="@android:color/holo_red_dark"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
-
-            <TextView
-                android:id="@+id/title_alarmtb"
-                android:textSize="18sp"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <ImageButton
-                android:id="@+id/add_alarm_btn"
-                android:src="@drawable/ab_common_add_icon"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
+    <include android:id="@+id/toolbar"
+        layout="@layout/titlebarthree"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/alarm_rv"
-        android:layout_marginTop="20dp"
         android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/check_btn"
+        android:src="@drawable/btn_check"
+
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:elevation="10dp"/>
 </RelativeLayout>

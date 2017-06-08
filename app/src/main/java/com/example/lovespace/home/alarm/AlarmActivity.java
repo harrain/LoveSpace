@@ -1,15 +1,58 @@
 package com.example.lovespace.home.alarm;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.example.lovespace.R;
+import com.example.lovespace.home.SpaceItemDecoration;
+import com.example.lovespace.main.activity.BaseActivity;
 
-public class AlarmActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class AlarmActivity extends BaseActivity {
+
+
+    @BindView(R.id.alarm_rv)
+    RecyclerView alarmRv;
+    @BindView(R.id.check_btn)
+    FloatingActionButton checkBtn;
+    private AlarmAdapter adapter;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_alarm);
+        ButterKnife.bind(this);
+        super.onCreate(savedInstanceState);
+        title.setText("闹钟");
+        initRecyclerView();
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AlarmActivity.this,CreateAlarmActivity.class));
+            }
+        });
+
+    }
+
+    private void initRecyclerView() {
+        adapter = new AlarmAdapter(mContext,null);
+        alarmRv.setAdapter(adapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        alarmRv.setLayoutManager(layoutManager);
+        alarmRv.addItemDecoration(new SpaceItemDecoration(2));
+
+    }
+
+
+    @OnClick(R.id.check_btn)
+    public void check() {
     }
 }
