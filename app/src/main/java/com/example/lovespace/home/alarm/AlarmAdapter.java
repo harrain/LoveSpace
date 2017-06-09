@@ -51,7 +51,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmHolder>
 
     @Override
     public int getItemCount() {
-        return 2;
+        return alarmList == null ? 0:alarmList.size();
     }
 
     class AlarmHolder extends RecyclerView.ViewHolder{
@@ -67,11 +67,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmHolder>
             ButterKnife.bind(this, view);
         }
 
-
         public void bind(int position) {
-            wuTv.setText(alarmList.get(position).getAlarmname());
-            timeTv.setText(alarmList.get(position).getAlarmtime());
-            switchCompat.setChecked(!alarmList.get(position).getClose());
+            try {
+                wuTv.setText(alarmList.get(position).getAlarmname());
+                timeTv.setText(alarmList.get(position).getAlarmtime());
+                switchCompat.setChecked(!alarmList.get(position).getClose());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 }
