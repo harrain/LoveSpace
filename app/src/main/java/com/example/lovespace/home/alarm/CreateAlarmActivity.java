@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -13,8 +14,6 @@ import android.widget.TimePicker;
 
 import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
-import com.example.lovespace.home.annversary.AnnversaryActivity;
-import com.example.lovespace.home.annversary.CreateAnniActivity;
 import com.example.lovespace.main.activity.BaseActivity;
 import com.example.lovespace.main.model.dao.AlarmDao;
 
@@ -33,6 +32,8 @@ public class CreateAlarmActivity extends BaseActivity {
     @BindView(R.id.tt)
     TextView tt;
     final int DATE_DIALOG = 1;
+    @BindView(R.id.sync_alarm_cb)
+    AppCompatCheckBox syncAlarmCb;
     private int mHour;
     private int mMinute;
 
@@ -45,18 +46,23 @@ public class CreateAlarmActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         title.setText("创建闹钟");
         add.setImageResource(R.drawable.done_icon);
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlarmDao.addToBmob(anameEt.getText().toString(), mHour + ":" + mMinute, null, Preferences.getCoupleId(), new SaveListener<String>() {
+                String cid = null;
+                if (syncAlarmCb.isChecked()){
+                    cid = Preferences.getCoupleId();
+                }
+                AlarmDao.addToBmob(anameEt.getText().toString(), mHour + ":" + mMinute, Preferences.getUserId(), cid, new SaveListener<String>() {
                     @Override
                     public void done(String s, BmobException e) {
                         if (e == null) {
                             Intent intent = new Intent(CreateAlarmActivity.this, AlarmActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
-                        }else {
-                            Log.e(TAG,"error:"+e.getMessage());
+                        } else {
+                            Log.e(TAG, "error:" + e.getMessage());
                         }
                     }
                 });
@@ -73,7 +79,7 @@ public class CreateAlarmActivity extends BaseActivity {
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DATE_DIALOG:
-                return new TimePickerDialog(this, mTimeListener, mHour, mMinute,true);
+                return new TimePickerDialog(this, mTimeListener, mHour, mMinute, true);
         }
         return null;
     }
@@ -84,8 +90,8 @@ public class CreateAlarmActivity extends BaseActivity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             mHour = hourOfDay;
             mMinute = minute;
-            Log.e(TAG,mHour+":"+mMinute);
-            tt.setText(mHour+":"+mMinute);
+            Log.e(TAG, mHour + ":" + mMinute);
+            tt.setText(mHour + ":" + mMinute);
         }
     };
 }
