@@ -419,7 +419,7 @@ public class LoginActivity extends UI implements View.OnKeyListener{
         ContactHttpClient.getInstance().register(account, nickName, password, new ContactHttpClient.ContactHttpCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                UserDao.addToBomb(account,nickName,password,,null,null);
+                UserDao.addToBomb(account,nickName,password,null,null,null);
                 Toast.makeText(LoginActivity.this, R.string.register_success, Toast.LENGTH_SHORT).show();
                 switchMode();  // 切换回登录
                 loginAccountEdit.setText(account);
