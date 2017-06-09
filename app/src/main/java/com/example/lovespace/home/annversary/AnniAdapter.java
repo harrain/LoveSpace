@@ -164,7 +164,7 @@ public class AnniAdapter extends RecyclerView.Adapter {
             List<Integer> list = dateUtil.string2int(day);
 
             ymTv.setText(list.get(0)+" "+list.get(1));
-            dateTv.setText(list.get(2));
+            dateTv.setText(list.get(2)+"");
 
             Date date = new Date();
             int anniday = countAnnidays(list.get(0),list.get(1),list.get(2));

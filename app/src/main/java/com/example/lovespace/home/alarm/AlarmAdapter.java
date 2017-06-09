@@ -6,6 +6,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.lovespace.R;
@@ -39,7 +40,13 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmHolder>
 
     @Override
     public void onBindViewHolder(AlarmHolder holder, int position) {
+        holder.bind(position);
+        holder.switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+            }
+        });
     }
 
     @Override
@@ -58,6 +65,13 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmHolder>
         AlarmHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+
+        public void bind(int position) {
+            wuTv.setText(alarmList.get(position).getAlarmname());
+            timeTv.setText(alarmList.get(position).getAlarmtime());
+            switchCompat.setChecked(!alarmList.get(position).getClose());
         }
     }
 }
