@@ -74,7 +74,7 @@ public class GalaryDao {
 
         String bql ="select * from Galary where coupleid = '"+cid+"'";//查询所有的游戏得分记录
         BmobQuery<Galary> query = new BmobQuery<Galary>();
-        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.doSQLQuery(bql,new SQLQueryListener<Galary>(){
 
             @Override

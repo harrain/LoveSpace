@@ -44,7 +44,7 @@ public class ImageDao {
 
         String bql ="select * from Image where galaryid = '"+gid+"' and where coupleid = '"+cid+"'";//查询所有的游戏得分记录
         BmobQuery<Image> query = new BmobQuery<Image>();
-        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.doSQLQuery(bql,new SQLQueryListener<Image>(){
 
             @Override

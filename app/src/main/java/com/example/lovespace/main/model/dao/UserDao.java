@@ -45,7 +45,7 @@ public class UserDao {
         //final List<User> users = new ArrayList<>();
 
         BmobQuery<User> bmobQuery = new BmobQuery<User>();
-        bmobQuery.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);    // 先从缓存获取数据，如果没有，再从网络获取。
+        bmobQuery.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);    // 先从缓存获取数据，如果没有，再从网络获取。
         bmobQuery.addWhereEqualTo("username",username);
         bmobQuery.findObjects(new FindListener<User>() {
             @Override

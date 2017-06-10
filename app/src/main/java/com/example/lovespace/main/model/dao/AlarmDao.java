@@ -16,7 +16,7 @@ public class AlarmDao {
     public static void fetchAlarms(String uid, String cid, SQLQueryListener<Alarm> listener){
         String bql = "select * from Alarm where userid = '"+uid+"' or where coupleid = '"+cid+"'";
         BmobQuery<Alarm> query = new BmobQuery<>();
-        query.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
         query.doSQLQuery(bql,listener);
 
     }
