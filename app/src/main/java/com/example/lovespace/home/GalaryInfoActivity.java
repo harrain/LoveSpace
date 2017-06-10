@@ -253,7 +253,7 @@ public class GalaryInfoActivity extends UI {
             public void done(BmobException e) {
                 if (e == null) {
                     Log.e(TAG, "更新相册表success");
-                    onSuccessDone();
+                    loadData();
                 }
                 else {
                     Log.e(TAG, "更新相册表fail");
