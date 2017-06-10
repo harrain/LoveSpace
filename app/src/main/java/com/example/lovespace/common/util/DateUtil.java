@@ -55,6 +55,17 @@ public class DateUtil {
         System.out.println("-----------------------------------------------------------");*/
     }
 
+    public Date str2date(String str){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+        Date date = null;
+        try {
+            date = sdf.parse(str);//字符串转成date
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
     public void string2date(){
         String datestr = "2017-05-20 09:08:07";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

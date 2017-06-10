@@ -17,6 +17,7 @@ import com.example.lovespace.main.activity.BaseActivity;
 import com.example.lovespace.main.model.bean.Alarm;
 import com.example.lovespace.main.model.dao.AlarmDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -36,7 +37,7 @@ public class AlarmActivity extends BaseActivity {
     @BindView(R.id.alarm_pb)
     ProgressBar alarmPb;
 
-    private AlarmAdapter adapter;
+    private AlarmComplexAdapter adapter;
     Context mContext;
     private List<Alarm> alarms;
 
@@ -51,24 +52,55 @@ public class AlarmActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         title.setText("闹钟");
+        alarms = new ArrayList<>();
         initRecyclerView();
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AlarmActivity.this,CreateAlarmActivity.class));
+                Intent intent = new Intent(AlarmActivity.this, CreateAlarmActivity.class);
+                intent.putExtra("alarmcount",alarms.size());
+                startActivity(intent);
             }
         });
+        initData();
 
     }
 
     private void initRecyclerView() {
-        adapter = new AlarmAdapter(mContext,alarms);
+        adapter = new AlarmComplexAdapter(alarms);
         alarmRv.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         alarmRv.setLayoutManager(layoutManager);
         alarmRv.addItemDecoration(new SpaceItemDecoration(2));
 
+        adapter.setOnItemClickListener(new AlarmComplexAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent i = new Intent(AlarmActivity.this,CreateAlarmActivity.class);
+                i.putExtra("name",alarms.get(position).getAlarmname());
+                i.putExtra("time",alarms.get(position).getAlarmtime());
+                i.putExtra("sync",alarms.get(position).getCoupleid() == null?false:true);
+                i.putExtra("objectId",alarms.get(position).getObjectId());
+                i.putExtra("index",position);
+                startActivity(i);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
+
+        alarmRv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING){
+                    adapter.closeItem();
+                }
+            }
+        });
     }
 
     @Override
@@ -85,16 +117,15 @@ public class AlarmActivity extends BaseActivity {
                 if(e ==null){
                     List<Alarm> list = result.getResults();
                     if(list!=null && list.size()>0){
+                        alarms.clear();
                         alarms.addAll(list);
-
                         adapter.notifyDataSetChanged();
+                        Log.e(TAG,"list size:"+alarms.size());
                     }else{
                         Log.e(TAG, "查询成功，无数据返回");
-
                     }
                 }else{
                     Log.e(TAG, "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
-
                 }
                 alarmPb.setVisibility(View.INVISIBLE);
             }

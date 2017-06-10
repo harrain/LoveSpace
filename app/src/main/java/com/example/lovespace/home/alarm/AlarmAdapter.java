@@ -3,6 +3,7 @@ package com.example.lovespace.home.alarm;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmHolder>
 
     private Context mContext;
     private List<Alarm> alarmList;
+    private String TAG = "AlarmAdapter";
 
     public AlarmAdapter(Context context, List<Alarm> list) {
         mContext = context;
@@ -69,6 +71,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmHolder>
 
         public void bind(int position) {
             try {
+                Log.e(TAG,alarmList.get(position).toString());
                 wuTv.setText(alarmList.get(position).getAlarmname());
                 timeTv.setText(alarmList.get(position).getAlarmtime());
                 switchCompat.setChecked(!alarmList.get(position).getClose());

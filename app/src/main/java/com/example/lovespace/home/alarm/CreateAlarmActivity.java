@@ -1,7 +1,10 @@
 package com.example.lovespace.home.alarm;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -11,6 +14,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
@@ -22,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 public class CreateAlarmActivity extends BaseActivity {
 
@@ -36,37 +41,61 @@ public class CreateAlarmActivity extends BaseActivity {
     AppCompatCheckBox syncAlarmCb;
     private int mHour;
     private int mMinute;
+    private int count;
 
     private String TAG = "CreateAlarmActivity";
+    private String cid;
+    private String uid;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_create_alarm);
         ButterKnife.bind(this);
         super.onCreate(savedInstanceState);
-        title.setText("创建闹钟");
         add.setImageResource(R.drawable.done_icon);
+        final Intent intent = getIntent();
+        String name = intent.getStringExtra("name");
+        if (name != null){
+            String time = intent.getStringExtra("time");
+            title.setText("闹钟详情");
+            anameEt.setText(name);
+            tt.setText(time);
+            syncAlarmCb.setChecked(intent.getBooleanExtra("sync",false));
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkSync();
+                    AlarmDao.updateAlarm(anameEt.getText().toString(), timeFormat(), uid, cid, intent.getStringExtra("objectId"),new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e == null) {
+                                Toast.makeText(mContext, "更新闹钟成功", Toast.LENGTH_SHORT).show();
+                                cancelAlarm(intent.getIntExtra("index",0));
+                                go2AlarmActivity();
+                                startAlarmService();
+                                finish();
+                            }else {
+                                Log.e(TAG, "error:" + e.getMessage());
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        title.setText("创建闹钟");
+        count = intent.getIntExtra("alarmcount",0);
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String cid = null;
-                String uid = null;
-                if (syncAlarmCb.isChecked()){
-                    cid = Preferences.getCoupleId();
-                }else {
-                    uid = Preferences.getUserId();
-                }
+                checkSync();
                 AlarmDao.addToBmob(anameEt.getText().toString(), timeFormat(), uid, cid, new SaveListener<String>() {
                     @Override
                     public void done(String s, BmobException e) {
                         if (e == null) {
-                            Intent intent = new Intent(CreateAlarmActivity.this, AlarmActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            Intent i = new Intent(CreateAlarmActivity.this,AlarmService.class);
-                            i .putExtra("time",timeFormat());
-                            startService(i);
+                            go2AlarmActivity();
+                            startAlarmService();
+                            finish();
                         } else {
                             Log.e(TAG, "error:" + e.getMessage());
                         }
@@ -74,6 +103,38 @@ public class CreateAlarmActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    private void checkSync() {
+        cid = null;
+        uid = null;
+        if (syncAlarmCb.isChecked()){
+            cid = Preferences.getCoupleId();
+        }else {
+            uid = Preferences.getUserId();
+        }
+    }
+
+    private void cancelAlarm(int position){
+        Intent intent1 = new Intent(mContext, AlarmReceiver.class);
+        intent1.putExtra("alarm_type", position + "");
+        AlarmManager manager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        PendingIntent pi = PendingIntent.getBroadcast(mContext, position, intent1, 0);
+        manager.cancel(pi);
+    }
+
+
+    private void startAlarmService() {
+        Intent i = new Intent(CreateAlarmActivity.this,AlarmService.class);
+        i .putExtra("time",timeFormat());
+        i.putExtra("alarmCount",count++);
+        startService(i);
+    }
+
+    private void go2AlarmActivity() {
+        Intent intent = new Intent(CreateAlarmActivity.this, AlarmActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @OnClick(R.id.time_picker)

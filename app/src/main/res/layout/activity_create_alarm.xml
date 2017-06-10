@@ -56,7 +56,7 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/sync_icon"
-            android:src="@drawable/Button_Sync"
+            android:src="@drawable/button_sync"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"

@@ -2,6 +2,7 @@ package com.example.lovespace.home.annversary;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class AnniAdapter extends RecyclerView.Adapter {
 
     List<FooterBean> footerBeens = new ArrayList<>();
     private DateUtil dateUtil;
+    private String TAG = "AnniAdapter";
 
     public AnniAdapter(Context context, List list) {
         this.mContext = context;
@@ -84,7 +86,11 @@ public class AnniAdapter extends RecyclerView.Adapter {
             ((FooterHolder)holder).bind(index);
         }else if (holder instanceof ContentHolder){
             index = position - 1;
-            ((ContentHolder)holder).bind(index);
+            try {
+                ((ContentHolder)holder).bind(index);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -157,7 +163,9 @@ public class AnniAdapter extends RecyclerView.Adapter {
             ButterKnife.bind(this, view);
         }
 
-        public void bind(int index) {
+        public void bind(int index) throws Exception{
+            Log.e(TAG,annis.get(index).toString());
+
             String day = annis.get(index).getAnnidate();
 
             dateUtil = new DateUtil();
