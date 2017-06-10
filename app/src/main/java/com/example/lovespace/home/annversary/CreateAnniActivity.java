@@ -120,7 +120,6 @@ public class CreateAnniActivity extends AppCompatActivity {
 
     private void go2AnniActivity() {
         Intent intent = new Intent(CreateAnniActivity.this, AnnversaryActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

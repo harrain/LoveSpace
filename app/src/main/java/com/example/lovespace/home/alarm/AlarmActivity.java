@@ -119,6 +119,9 @@ public class AlarmActivity extends BaseActivity {
                     if(list!=null && list.size()>0){
                         alarms.clear();
                         alarms.addAll(list);
+                        /*for (Alarm alarm : list) {
+                            Log.e(TAG,"oid:"+Integer.parseInt(alarm.getObjectId()));
+                        }*/
                         adapter.notifyDataSetChanged();
                         Log.e(TAG,"list size:"+alarms.size());
                     }else{

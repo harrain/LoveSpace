@@ -13,6 +13,7 @@ public class Alarm extends BmobObject {
     private String alarmname;
     private String alarmtime;
     private Boolean isClose;
+    private Integer aid;
 
     public Alarm(){}
     public Alarm(String name,String time,String cid,String uid,Boolean isClose ){
@@ -63,6 +64,14 @@ public class Alarm extends BmobObject {
         isClose = close;
     }
 
+    public Integer getAid() {
+        return aid;
+    }
+
+    public void setAid(Integer aid) {
+        this.aid = aid;
+    }
+
     @Override
     public String toString() {
         return "Alarm{" +
@@ -72,6 +81,7 @@ public class Alarm extends BmobObject {
                 ", alarmname='" + alarmname + '\'' +
                 ", alarmtime='" + alarmtime + '\'' +
                 ", isClose ='" + isClose + '\'' +
+                ", aid = '"  + aid          +'\'' +
                 '}';
     }
 }

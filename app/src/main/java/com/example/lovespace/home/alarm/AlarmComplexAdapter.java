@@ -28,7 +28,11 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 
 /**
- * Created by stephen on 2017/6/9.
+ * 包名：
+ * 类名：
+ * 类功能：符合alarmadapter，实现左滑删除，条目短按长按点击事件
+ * 创建者：
+ * 创建日期：
  */
 
 public class AlarmComplexAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
@@ -170,6 +174,9 @@ public class AlarmComplexAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 }
             });
+            if (alarmList.get(position).getCoupleid() != null){
+
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

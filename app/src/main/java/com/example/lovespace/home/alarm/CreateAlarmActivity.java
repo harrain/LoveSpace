@@ -134,7 +134,7 @@ public class CreateAlarmActivity extends BaseActivity {
 
     private void go2AlarmActivity() {
         Intent intent = new Intent(CreateAlarmActivity.this, AlarmActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         startActivity(intent);
     }
 
