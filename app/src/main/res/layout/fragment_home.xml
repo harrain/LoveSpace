@@ -28,20 +28,18 @@
             android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="80dp">
-            <com.makeramen.roundedimageview.RoundedImageView
+            <com.netease.nim.uikit.common.ui.imageview.HeadImageView
                 android:id="@+id/home_me_head"
                 android:layout_alignParentLeft="true"
                 android:src="@mipmap/sex_female_icon"
                 android:scaleType="centerCrop"
-                app:riv_oval="true"
                 android:layout_width="@dimen/homefragment_headroundimage_width"
                 android:layout_height="@dimen/homefragment_headroundimage_height" />
-            <com.makeramen.roundedimageview.RoundedImageView
+            <com.netease.nim.uikit.common.ui.imageview.HeadImageView
                 android:id="@+id/home_other_head"
                 android:layout_alignParentRight="true"
                 android:src="@mipmap/sex_male_icon"
                 android:scaleType="centerCrop"
-                app:riv_oval="true"
                 android:layout_width="@dimen/homefragment_headroundimage_width"
                 android:layout_height="@dimen/homefragment_headroundimage_height" />
             <TextView

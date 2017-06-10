@@ -39,6 +39,8 @@ public class BaseApplication extends Application {
 
     private static final String BOMB_APPCATION_ID = "27bc225df548d8d318d4e751c7e5b0ed";
 
+    private static Application instance;
+
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(newBase);
         MultiDex.install(this);
@@ -47,6 +49,7 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
 
         initBomb();
         DemoCache.setContext(this);
@@ -192,5 +195,9 @@ public class BaseApplication extends Application {
                 return false;
             }
         });
+    }
+
+    public static Application getInstance() {
+        return instance;
     }
 }

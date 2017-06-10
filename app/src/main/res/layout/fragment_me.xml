@@ -42,13 +42,13 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/setting_headview_paddingtop">
 
-                <com.makeramen.roundedimageview.RoundedImageView
+                <com.netease.nim.uikit.common.ui.imageview.HeadImageView
                     android:id="@+id/headview"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
-                    android:src="@mipmap/avatar_def"
-                    app:riv_oval="true" />
+
+                     />
 
 
                 <TextView
@@ -107,7 +107,7 @@
                 style="@style/item_setting"
                 android:visibility="gone">
 
-                <ImageView
+                <com.netease.nim.uikit.common.ui.imageview.HeadImageView
                     android:id="@+id/buddy_head_iv"
                     android:layout_width="40dp"
                     android:layout_height="40dp"

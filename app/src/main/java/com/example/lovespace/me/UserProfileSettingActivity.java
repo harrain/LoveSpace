@@ -68,6 +68,7 @@ public class UserProfileSettingActivity extends UI {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile_setting);
         ToolBarOptions options = new ToolBarOptions();
+        options.navigateId = R.drawable.ab_actionbar_back_icon;
         options.titleId = R.string.user_information;
         setToolBar(R.id.toolbar, options);
         ButterKnife.bind(this);
