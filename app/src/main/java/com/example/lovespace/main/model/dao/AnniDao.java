@@ -12,6 +12,7 @@ import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * 包名：
@@ -51,5 +52,17 @@ public class AnniDao {
     public static void addToBmob(String name, String annidate, String alarmdate, String alarmtime, String coupleid, SaveListener<String> listener){
         Anni anni = new Anni(name,annidate,alarmdate,alarmtime,coupleid);
         anni.save(listener);
+    }
+
+    public static void deleteRow(String objectId, UpdateListener listener){
+        Anni anni = new Anni();
+        anni.setObjectId(objectId);
+        anni.delete(objectId,listener);
+    }
+
+    public static void updateRow(String row,String value, String objectId,UpdateListener listener){
+        Anni anni = new Anni();
+        anni.setValue(row,value);
+        anni.update(objectId, listener);
     }
 }

@@ -5,6 +5,7 @@ import com.example.lovespace.main.model.bean.Alarm;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by stephen on 2017/6/4.
@@ -24,4 +25,17 @@ public class AlarmDao {
         Alarm alarm = new Alarm(name,time,coupleid,uid,false);
         alarm.save(listener);
     }
+
+    public static void deleteRow(String objectId, UpdateListener listener){
+        Alarm alarm = new Alarm();
+        alarm.setObjectId(objectId);
+        alarm.delete(objectId,listener);
+    }
+
+    public static void updateRow(String row,String value, String objectId,UpdateListener listener){
+        Alarm alarm = new Alarm();
+        alarm.setValue(row,value);
+        alarm.update(objectId, listener);
+    }
+
 }

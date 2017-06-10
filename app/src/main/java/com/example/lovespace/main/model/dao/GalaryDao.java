@@ -12,6 +12,7 @@ import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by stephen on 2017/6/3.
@@ -94,5 +95,17 @@ public class GalaryDao {
             }
         });
         //return galarys.size() == 0?null:galarys;
+    }
+
+    public static void deleteRow(String objectId, UpdateListener listener){
+        Galary galary = new Galary();
+        galary.setObjectId(objectId);
+        galary.delete(objectId,listener);
+    }
+
+    public static void updateRow(String row,String value, String objectId,UpdateListener listener){
+        Galary galary = new Galary();
+        galary.setValue(row,value);
+        galary.update(objectId, listener);
     }
 }

@@ -19,6 +19,8 @@ public class User extends BmobObject {
     private String coupleid;
 
 
+    public User(){}
+
     public User(String name,String nick,String pass,String sex,Date birth,String cid){
         username = name;
         nickname = nick;

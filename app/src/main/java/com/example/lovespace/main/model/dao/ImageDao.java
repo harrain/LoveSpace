@@ -12,6 +12,7 @@ import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by stephen on 2017/6/3.
@@ -64,5 +65,11 @@ public class ImageDao {
             }
         });
         //return images.size() == 0?null:images;
+    }
+
+    public static void deleteRow(String objectId, UpdateListener listener){
+        Image image = new Image();
+        image.setObjectId(objectId);
+        image.delete(objectId,listener);
     }
 }

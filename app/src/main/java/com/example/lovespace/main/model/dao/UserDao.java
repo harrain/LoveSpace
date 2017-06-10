@@ -15,6 +15,7 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by stephen on 2017/6/3.
@@ -63,6 +64,18 @@ public class UserDao {
 
         });
         //return users.size() == 0?null:users.get(0);
+    }
+
+    public static void deleteRow(String objectId, UpdateListener listener){
+        User user = new User();
+        user.setObjectId(objectId);
+        user.delete(objectId,listener);
+    }
+
+    public static void updateRow(String row,String value, String objectId,UpdateListener listener){
+        User user = new User();
+        user.setValue(row,value);
+        user.update(objectId, listener);
     }
 
     public static User getUserInfo(String objectId){
