@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
@@ -24,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 public class CreateAnniActivity extends AppCompatActivity {
 
@@ -52,12 +55,46 @@ public class CreateAnniActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mContext = this;
         add.setImageResource(R.drawable.done_icon);
-        title.setText("创建纪念日");
-
         final Calendar ca = Calendar.getInstance();
         mYear = ca.get(Calendar.YEAR);
         mMonth = ca.get(Calendar.MONTH);
         mDay = ca.get(Calendar.DAY_OF_MONTH);
+        final Intent intent = getIntent();
+        String name = intent.getStringExtra("name");
+        if (name != null){
+            String time = intent.getStringExtra("time");
+            title.setText("纪念日详情");
+            anameEt.setText(name);
+            dt.setText(time);
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AnniDao.updateAnni(anameEt.getText().toString(), mYear + "-" + mMonth + "-" + mDay,
+                            Preferences.getCoupleId(), intent.getStringExtra("objectId"), new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if (e == null) {
+                                        Toast.makeText(mContext, "更新纪念日成功", Toast.LENGTH_SHORT).show();
+                                        go2AnniActivity();
+                                        finish();
+                                    }else {
+                                        Log.e(TAG,"error:"+e.getMessage());
+                                    }
+                                }
+                            });
+                }
+            });
+            return;
+        }
+        String footname = intent.getStringExtra("footname");
+        anameEt.setText(footname);
+        title.setText("创建纪念日");
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onAdd();
+            }
+        });
     }
 
 
@@ -66,20 +103,25 @@ public class CreateAnniActivity extends AppCompatActivity {
         finish();
     }
 
-    @OnClick(R.id.add)
-    public void onAddClicked() {
+
+    public void onAdd() {
         AnniDao.addToBmob(anameEt.getText().toString(), mYear+"-"+mMonth+"-"+mDay, null, null, Preferences.getCoupleId(), new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
                 if (e == null) {
-                    Intent intent = new Intent(CreateAnniActivity.this, AnnversaryActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                    go2AnniActivity();
+                    finish();
                 }else {
                     Log.e(TAG,"error:"+e.getMessage());
                 }
             }
         });
+    }
+
+    private void go2AnniActivity() {
+        Intent intent = new Intent(CreateAnniActivity.this, AnnversaryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     @OnClick(R.id.date_picker)
@@ -109,7 +151,7 @@ public class CreateAnniActivity extends AppCompatActivity {
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
             mYear = year;
-            mMonth = monthOfYear;
+            mMonth = monthOfYear +1;
             mDay = dayOfMonth;
             Log.e(TAG,mYear+"-"+mMonth+"-"+mDay);
             dt.setText(mYear+"-"+mMonth+"-"+mDay);

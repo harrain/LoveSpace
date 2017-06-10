@@ -1,6 +1,8 @@
 package com.example.lovespace.home.annversary;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +47,18 @@ public class AnniAdapter extends RecyclerView.Adapter {
         initFooterBean();
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+
+        void onItemLongClick(View view, int position);
+    }
+
+    private OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
@@ -74,20 +88,45 @@ public class AnniAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        int index;
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        final int[] index = new int[1];
         if (holder instanceof FooterHolder) {
 
             if (annis!= null) {
-                 index = position - annis.size() - 1;
+                 index[0] = position - annis.size() - 1;
             }else {
-                index = position - 1;
+                index[0] = position - 1;
             }
-            ((FooterHolder)holder).bind(index);
+            ((FooterHolder)holder).bind(index[0]);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(mContext,CreateAnniActivity.class);
+                    i.putExtra("footname",footerBeens.get(index[0]).getTitle());
+
+                    mContext.startActivity(i);
+                }
+            });
+
         }else if (holder instanceof ContentHolder){
-            index = position - 1;
+            index[0] = position - 1;
             try {
-                ((ContentHolder)holder).bind(index);
+                ((ContentHolder)holder).bind(index[0]);
+                if (onItemClickListener != null){
+                    ((ContentHolder)holder).cardView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            onItemClickListener.onItemClick(view,index[0]);
+                        }
+                    });
+                    ((ContentHolder)holder).cardView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View view) {
+                            onItemClickListener.onItemLongClick(view,index[0]);
+                            return false;
+                        }
+                    });
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -157,6 +196,8 @@ public class AnniAdapter extends RecyclerView.Adapter {
         TextView ymTv;
         @BindView(R.id.date_tv)
         TextView dateTv;
+        @BindView(R.id.cardview)
+        CardView cardView;
 
         ContentHolder(View view) {
             super(view);

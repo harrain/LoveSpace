@@ -7,6 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -25,6 +29,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
 
 public class AnnversaryActivity extends AppCompatActivity {
 
@@ -47,6 +53,8 @@ public class AnnversaryActivity extends AppCompatActivity {
     private AnniAdapter adapter;
     private String uid;
     private String cid;
+    int index;
+    private String TAG = "AnnversaryActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +78,7 @@ public class AnnversaryActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        Log.e(TAG,"onNewIntent...");
         annis.clear();
         fetchData();
     }
@@ -86,18 +95,39 @@ public class AnnversaryActivity extends AppCompatActivity {
         anniRv.setLayoutManager(layoutManager);
         adapter = new AnniAdapter(mContext, annis);
         anniRv.setAdapter(adapter);
-
         anniRv.addItemDecoration(new SpaceItemDecoration(10));
+
+        //注册视图对象，即为ListView控件注册上下文菜单
+        registerForContextMenu(anniRv);
+
+        adapter.setOnItemClickListener(new AnniAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent i = new Intent(mContext,CreateAnniActivity.class);
+                i.putExtra("name",annis.get(position).getAnniname());
+                i.putExtra("time",annis.get(position).getAnnidate());
+                i.putExtra("objectId",annis.get(position).getObjectId());
+                i.putExtra("index",position);
+                startActivity(i);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                Log.e(TAG,"u click the "+ position+" ..");
+                index = position;
+            }
+        });
 
     }
 
     private void fetchData(){
-        AnniDao.fetchAnnis(uid, cid, new OnCompleteListener<List<Anni>>() {
+        AnniDao.fetchAnnis(cid, new OnCompleteListener<List<Anni>>() {
             @Override
             public void onSuccess(List<Anni> data) {
                 if (data.size()>0) {
                     annis.clear();
                     annis.addAll(data);
+                    Log.e(TAG,"refresh size:"+annis.size());
                     anniPb.setVisibility(View.INVISIBLE);
                     adapter.notifyDataSetChanged();
                 }
@@ -109,6 +139,32 @@ public class AnnversaryActivity extends AppCompatActivity {
                 anniPb.setVisibility(View.INVISIBLE);
             }
         });
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.amenu,menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.delete){
+            AnniDao.deleteRow(annis.get(index).getObjectId(), new UpdateListener() {
+                @Override
+                public void done(BmobException e) {
+                    if (e == null){
+                        annis.remove(index);
+                        adapter.notifyItemRemoved(index);
+                        adapter.notifyDataSetChanged();
+                    }else {
+                        Log.e(TAG,"exception:"+e.getMessage());
+                    }
+                }
+            });
+        }
+        return super.onContextItemSelected(item);
     }
 
     @OnClick(R.id.add)

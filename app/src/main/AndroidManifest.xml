@@ -201,10 +201,12 @@
         <activity android:name=".me.AddFriendActivity" />
         <activity android:name=".home.GalaryActivity" />
         <activity android:name=".home.GalaryInfoActivity" />
-        <activity android:name=".home.annversary.AnnversaryActivity" />
+        <activity android:name=".home.annversary.AnnversaryActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".home.CreateGalaryActivity" />
         <activity android:name=".home.annversary.CreateAnniActivity" />
-        <activity android:name=".home.alarm.AlarmActivity" />
+        <activity android:name=".home.alarm.AlarmActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".home.alarm.CreateAlarmActivity" />
 
         <service
