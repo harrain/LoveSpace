@@ -81,6 +81,7 @@ public class CreateAlarmActivity extends BaseActivity {
                     });
                 }
             });
+            return;
         }
         title.setText("创建闹钟");
         count = intent.getIntExtra("alarmcount",0);
