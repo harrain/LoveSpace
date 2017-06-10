@@ -51,16 +51,22 @@ public class CreateAlarmActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 String cid = null;
+                String uid = null;
                 if (syncAlarmCb.isChecked()){
                     cid = Preferences.getCoupleId();
+                }else {
+                    uid = Preferences.getUserId();
                 }
-                AlarmDao.addToBmob(anameEt.getText().toString(), mHour + ":" + mMinute, Preferences.getUserId(), cid, new SaveListener<String>() {
+                AlarmDao.addToBmob(anameEt.getText().toString(), timeFormat(), uid, cid, new SaveListener<String>() {
                     @Override
                     public void done(String s, BmobException e) {
                         if (e == null) {
                             Intent intent = new Intent(CreateAlarmActivity.this, AlarmActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
+                            Intent i = new Intent(CreateAlarmActivity.this,AlarmService.class);
+                            i .putExtra("time",timeFormat());
+                            startService(i);
                         } else {
                             Log.e(TAG, "error:" + e.getMessage());
                         }
@@ -90,8 +96,26 @@ public class CreateAlarmActivity extends BaseActivity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             mHour = hourOfDay;
             mMinute = minute;
-            Log.e(TAG, mHour + ":" + mMinute);
-            tt.setText(mHour + ":" + mMinute);
+            Log.e(TAG, timeFormat());
+            tt.setText(timeFormat());
         }
     };
+
+    public String timeFormat(){
+        StringBuilder sb = new StringBuilder();
+        if (mHour < 10){
+            sb.append("0");
+            sb.append(mHour);
+        }else {
+            sb.append(mHour);
+        }
+        sb.append("-");
+        if (mMinute <10){
+            sb.append("0");
+            sb.append(mMinute);
+        }else {
+            sb.append(mMinute);
+        }
+        return sb.toString();
+    }
 }

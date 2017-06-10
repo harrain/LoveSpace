@@ -96,6 +96,7 @@ public class AnnversaryActivity extends AppCompatActivity {
             @Override
             public void onSuccess(List<Anni> data) {
                 if (data.size()>0) {
+                    annis.clear();
                     annis.addAll(data);
                     anniPb.setVisibility(View.INVISIBLE);
                     adapter.notifyDataSetChanged();
