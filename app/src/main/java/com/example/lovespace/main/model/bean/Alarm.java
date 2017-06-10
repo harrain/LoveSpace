@@ -82,6 +82,8 @@ public class Alarm extends BmobObject {
                 ", alarmtime='" + alarmtime + '\'' +
                 ", isClose ='" + isClose + '\'' +
                 ", aid = '"  + aid          +'\'' +
+                ", createdAt='" + getCreatedAt() + '\'' +
+                ", updatedAt='" + getUpdatedAt() + '\'' +
                 '}';
     }
 }

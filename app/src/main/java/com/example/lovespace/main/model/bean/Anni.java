@@ -73,6 +73,8 @@ public class Anni extends BmobObject{
                 ", alarmdate='" + alarmdate + '\'' +
                 ", alarmtime='" + alarmtime + '\'' +
                 ", coupleid='" + coupleid + '\'' +
+                ", createdAt='" + getCreatedAt() + '\'' +
+                ", updatedAt='" + getUpdatedAt() + '\'' +
                 '}';
     }
 }

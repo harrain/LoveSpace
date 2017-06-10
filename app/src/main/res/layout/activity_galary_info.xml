@@ -34,7 +34,7 @@
 
     <RelativeLayout
         android:id="@+id/head_rl"
-        android:background="@drawable/album_default_cover_0"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

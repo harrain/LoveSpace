@@ -8,35 +8,29 @@ import cn.bmob.v3.BmobObject;
 
 public class Couple extends BmobObject {
 
-    private String girlname;
+    private String couplenames;
 
-    private String boyname;
+    public Couple(){}
 
-
-
-
-    public String getGirlname() {
-        return girlname;
+    public Couple(String couplenames) {
+        this.couplenames = couplenames;
     }
 
-    public void setGirlname(String girlname) {
-        this.girlname = girlname;
+    public String getCouplenames() {
+        return couplenames;
     }
 
-    public String getBoyname() {
-        return boyname;
-    }
-
-    public void setBoyname(String boyname) {
-        this.boyname = boyname;
+    public void setCouplenames(String couplenames) {
+        this.couplenames = couplenames;
     }
 
     @Override
     public String toString() {
         return "Couple{" +
                 "objectId='" + getObjectId() + '\'' +
-                ", girlname='" + girlname + '\'' +
-                ", boyname='" + boyname + '\'' +
+                ", couplenames='" + couplenames + '\'' +
+                ", createdAt='" + getCreatedAt() + '\'' +
+                ", updatedAt='" + getUpdatedAt() + '\'' +
                 '}';
     }
 }

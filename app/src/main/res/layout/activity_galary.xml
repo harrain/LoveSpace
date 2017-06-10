@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:title="相册"
         app:navigationIcon="@mipmap/ic_toolbar_back"
-        android:background="@color/color_red_f04c62">
+        android:background="@android:color/holo_red_dark">
 
         <RelativeLayout
             android:background="@android:color/transparent"

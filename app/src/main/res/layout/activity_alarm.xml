@@ -18,7 +18,6 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/check_btn"
         android:src="@drawable/btn_check"
-
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/activity_horizontal_margin"
