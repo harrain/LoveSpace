@@ -23,6 +23,7 @@ import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.home.alarm.AlarmActivity;
 import com.example.lovespace.home.annversary.AnnversaryActivity;
+import com.example.lovespace.home.dynamics.DynamicsActivity;
 import com.netease.nim.uikit.cache.NimUserInfoCache;
 import com.netease.nim.uikit.common.ui.imageview.HeadImageView;
 import com.netease.nimlib.sdk.RequestCallback;
@@ -83,6 +84,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                 startActivity(new Intent(mContext, AlarmActivity.class));
                 break;
             case 3:
+                startActivity(new Intent(mContext, DynamicsActivity.class));
                 break;
         }
     }

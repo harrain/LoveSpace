@@ -201,19 +201,25 @@
         <activity android:name=".me.AddFriendActivity" />
         <activity android:name=".home.GalaryActivity" />
         <activity android:name=".home.GalaryInfoActivity" />
-        <activity android:name=".home.annversary.AnnversaryActivity"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".home.annversary.AnnversaryActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".home.CreateGalaryActivity" />
         <activity android:name=".home.annversary.CreateAnniActivity" />
-        <activity android:name=".home.alarm.AlarmActivity"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".home.alarm.AlarmActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".home.alarm.CreateAlarmActivity" />
 
-        <service
-            android:name=".home.alarm.AlarmService" />
-        <receiver android:name=".home.alarm.AlarmReceiver">
+        <service android:name=".home.alarm.AlarmService" />
 
-            </receiver>
+        <receiver android:name=".home.alarm.AlarmReceiver" />
+
+        <activity
+            android:name=".home.dynamics.DynamicsActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".home.dynamics.CreateDyActivity" />
+        <activity android:name=".home.dynamics.DyInfoActivity"/>
     </application>
 
 </manifest>
