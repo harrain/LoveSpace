@@ -18,6 +18,8 @@ import com.example.lovespace.DemoCache;
 import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.main.model.Extras;
+import com.example.lovespace.main.model.dao.CoupleDao;
+import com.example.lovespace.main.model.dao.UserDao;
 import com.example.lovespace.session.SessionHelper;
 import com.netease.nim.uikit.cache.FriendDataCache;
 import com.netease.nim.uikit.cache.NimUserInfoCache;
@@ -47,6 +49,10 @@ import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * 用户资料页面
@@ -616,9 +622,42 @@ public class UserProfileActivity extends UI {
 
     private void saveLocal(String account){
         Preferences.saveOtherAccount(account);
+        CoupleDao.addToBmob(DemoCache.getAccount(), account, new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e==null){
+                    Log.e(TAG,"插入情侣表成功");
+                    UserDao.updateRow("coupleid",s,Preferences.getUserId(), new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e==null){
+                                Log.e(TAG,"更新coupleid成功");
+                            }else {
+                                Log.e(TAG,"updateRow:"+e.getMessage());
+                            }
+                        }
+                    });
+
+                }else {
+                    Log.e(TAG,"addToBmob:"+e.getMessage());
+                }
+            }
+        });
     }
 
     private void deleteLocal(){
         Preferences.saveOtherAccount("");
+        UserDao.updateRow("coupleid","",Preferences.getUserId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e==null){
+                    Log.e(TAG,"清空coupleid成功");
+                }else {
+                    Log.e(TAG,"清空coupleid:"+e.getMessage());
+                }
+            }
+        });
     }
+
+
 }
