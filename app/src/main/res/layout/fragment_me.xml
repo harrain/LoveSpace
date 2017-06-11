@@ -170,7 +170,7 @@
 
                 <TextView
                     style="@style/item_setting_textview"
-                    android:text="自定义呼吸灯"
+                    android:text="呼吸灯"
                      />
 
                 <android.support.v7.widget.SwitchCompat
@@ -186,7 +186,7 @@
 
                 <TextView
                     style="@style/item_setting_textview"
-                    android:text="通知栏标题定制"
+                    android:text="通知栏标题"
                      />
 
                 <android.support.v7.widget.SwitchCompat
@@ -202,16 +202,25 @@
 
                 <TextView
                     style="@style/item_setting_textview"
-                    android:text="免打扰"
+                    android:text="听筒模式"
                      />
 
                 <android.support.v7.widget.SwitchCompat
-                    android:id="@+id/disturb_item_toggle"
+                    android:id="@+id/listen_item_toggle"
                     style="@style/nimSwitchButton" />
             </RelativeLayout>
 
             <View
                 style="@style/item_divider" />
+
+            <RelativeLayout
+                android:id="@+id/clear_record"
+                style="@style/item_setting">
+                <TextView
+                    style="@style/item_setting_textview"
+                    android:text="清空所有聊天记录"
+                    />
+            </RelativeLayout>
 
         </LinearLayout>
 

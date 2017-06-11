@@ -1,7 +1,10 @@
 package com.example.lovespace;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Environment;
 import android.support.multidex.MultiDex;
@@ -10,11 +13,14 @@ import android.text.TextUtils;
 import com.example.lovespace.common.util.sys.SystemUtil;
 import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.config.preference.UserPreferences;
-import com.example.lovespace.main.activity.WelcomeActivity;
 import com.example.lovespace.session.NimDemoLocationProvider;
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.contact.core.query.PinYin;
+import com.netease.nim.uikit.custom.DefalutUserInfoProvider;
+import com.netease.nim.uikit.session.activity.P2PMessageActivity;
+import com.netease.nim.uikit.session.viewholder.MsgViewHolderThumbBase;
 import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.NimStrings;
 import com.netease.nimlib.sdk.SDKOptions;
 import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.auth.LoginInfo;
@@ -72,6 +78,8 @@ public class BaseApplication extends Application {
             registerIMMessageFilter();
             // 初始化消息提醒
             NIMClient.toggleNotification(UserPreferences.getNotificationToggle());
+            // 注册语言变化监听
+            registerLocaleReceiver(true);
         }
     }
 
@@ -121,6 +129,16 @@ public class BaseApplication extends Application {
         // 配置是否需要预下载附件缩略图
         options.preloadAttach = true;
 
+        // 配置附件缩略图的尺寸大小，
+        options.thumbnailSize = MsgViewHolderThumbBase.getImageMaxEdge();
+
+        // 用户信息提供者
+        options.userInfoProvider = new DefalutUserInfoProvider(this);
+
+
+        // 在线多端同步未读数
+        options.sessionReadAck = true;
+
 
         return options;
     }
@@ -152,7 +170,7 @@ public class BaseApplication extends Application {
     private StatusBarNotificationConfig loadStatusBarNotificationConfig(){
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
         //点击通知跳转到的界面
-        config.notificationEntrance = WelcomeActivity.class;
+        config.notificationEntrance = P2PMessageActivity.class;
         config.notificationSmallIconId = R.mipmap.ic_stat_notify_msg;
         //通知铃声uri
         config.notificationSound = "android.resource://com.example.lovespace/raw/msg";
@@ -196,6 +214,42 @@ public class BaseApplication extends Application {
             }
         });
     }
+
+    private void registerLocaleReceiver(boolean register) {
+        if (register) {
+            updateLocale();
+            IntentFilter filter = new IntentFilter(Intent.ACTION_LOCALE_CHANGED);
+            registerReceiver(localeReceiver, filter);
+        } else {
+            unregisterReceiver(localeReceiver);
+        }
+    }
+
+    private BroadcastReceiver localeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
+                updateLocale();
+            }
+        }
+    };
+
+    private void updateLocale() {
+        NimStrings strings = new NimStrings();
+        strings.status_bar_multi_messages_incoming = getString(R.string.nim_status_bar_multi_messages_incoming);
+        strings.status_bar_image_message = getString(R.string.nim_status_bar_image_message);
+        strings.status_bar_audio_message = getString(R.string.nim_status_bar_audio_message);
+        strings.status_bar_custom_message = getString(R.string.nim_status_bar_custom_message);
+        strings.status_bar_file_message = getString(R.string.nim_status_bar_file_message);
+        strings.status_bar_location_message = getString(R.string.nim_status_bar_location_message);
+        strings.status_bar_notification_message = getString(R.string.nim_status_bar_notification_message);
+        strings.status_bar_ticker_text = getString(R.string.nim_status_bar_ticker_text);
+        strings.status_bar_unsupported_message = getString(R.string.nim_status_bar_unsupported_message);
+        strings.status_bar_video_message = getString(R.string.nim_status_bar_video_message);
+        strings.status_bar_hidden_message_content = getString(R.string.nim_status_bar_hidden_msg_content);
+        NIMClient.updateStrings(strings);
+    }
+
 
     public static Application getInstance() {
         return instance;

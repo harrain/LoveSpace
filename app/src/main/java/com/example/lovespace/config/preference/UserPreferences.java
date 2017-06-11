@@ -36,12 +36,41 @@ public class UserPreferences {
         saveBoolean(KEY_MSG_IGNORE, enable);
     }
 
+    public static void setNotificationToggle(boolean on) {
+        saveBoolean(KEY_SB_NOTIFY_TOGGLE, on);
+    }
+
+
     public static boolean getNotificationToggle() {
         return getBoolean(KEY_SB_NOTIFY_TOGGLE, true);
     }
 
     public static boolean getMsgIgnore() {
         return getBoolean(KEY_MSG_IGNORE, false);
+    }
+
+    public static void setRingToggle(boolean on) {
+        saveBoolean(KEY_RING_TOGGLE, on);
+    }
+
+    public static boolean getRingToggle() {
+        return getBoolean(KEY_RING_TOGGLE, true);
+    }
+
+    public static void setLedToggle(boolean on) {
+        saveBoolean(KEY_LED_TOGGLE, on);
+    }
+
+    public static boolean getLedToggle() {
+        return getBoolean(KEY_LED_TOGGLE, true);
+    }
+
+    public static boolean getNoticeContentToggle() {
+        return getBoolean(KEY_NOTICE_CONTENT_TOGGLE, false);
+    }
+
+    public static void setNoticeContentToggle(boolean on) {
+        saveBoolean(KEY_NOTICE_CONTENT_TOGGLE, on);
     }
 
     private static boolean getBoolean(String key, boolean value) {
