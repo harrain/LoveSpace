@@ -1,5 +1,6 @@
 package com.example.lovespace.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
@@ -24,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bmob.v3.exception.BmobException;
 
 public class GalaryActivity extends UI {
 
@@ -42,13 +45,14 @@ public class GalaryActivity extends UI {
     private GalaryAdapter adapter;
     private String cid;
     private String TAG = "GalaryActivity";
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_galary);
         ButterKnife.bind(this);
         super.onCreate(savedInstanceState);
-
+        mContext = this;
         galaries = new ArrayList<>();
 
         setSupportActionBar(toolbar);
@@ -83,8 +87,13 @@ public class GalaryActivity extends UI {
                 }
 
                 @Override
-                public void onFailure(Exception e) {
+                public void onFailure(BmobException e) {
                     progressBar.setVisibility(View.INVISIBLE);
+                    if (e.getErrorCode() == 9010){
+                        Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                    }else if (e.getErrorCode() == 9016){
+                        Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 

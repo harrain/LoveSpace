@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
@@ -135,8 +136,15 @@ public class AnnversaryActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Exception e) {
+            public void onFailure(BmobException e) {
+
                 anniPb.setVisibility(View.INVISIBLE);
+                if (e.getErrorCode() == 9010){
+                    Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                }else if (e.getErrorCode() == 9016){
+                    Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                }
+                Log.e(TAG,"fetchannis:"+e.getMessage());
             }
         });
     }
@@ -159,7 +167,12 @@ public class AnnversaryActivity extends AppCompatActivity {
                         adapter.notifyItemRemoved(index);
                         adapter.notifyDataSetChanged();
                     }else {
-                        Log.e(TAG,"exception:"+e.getMessage());
+                        if (e.getErrorCode() == 9010){
+                            Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                        }else if (e.getErrorCode() == 9016){
+                            Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                        }
+                        Log.e(TAG,"deleteexception:"+e.getMessage());
                     }
                 }
             });

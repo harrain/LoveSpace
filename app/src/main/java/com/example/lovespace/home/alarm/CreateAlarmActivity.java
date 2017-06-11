@@ -75,7 +75,12 @@ public class CreateAlarmActivity extends BaseActivity {
                                 startAlarmService();
                                 finish();
                             }else {
-                                Log.e(TAG, "error:" + e.getMessage());
+                                if (e.getErrorCode() == 9010){
+                                    Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                                }else if (e.getErrorCode() == 9016){
+                                    Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                                }
+                                Log.e(TAG, "updateerror:" + e.getMessage());
                             }
                         }
                     });

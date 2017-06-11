@@ -50,6 +50,11 @@ public class CreateDyActivity extends BaseActivity {
                                     startActivity(intent);
                                     finish();
                                 } else {
+                                    if (e.getErrorCode() == 9010){
+                                        Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                                    }else if (e.getErrorCode() == 9016){
+                                        Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                                    }
                                     Toast.makeText(mContext, "发布留言失败", Toast.LENGTH_SHORT).show();
                                     Log.e(TAG, "e:" + e.getMessage());
                                 }

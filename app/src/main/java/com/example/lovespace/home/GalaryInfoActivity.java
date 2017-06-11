@@ -135,7 +135,12 @@ public class GalaryInfoActivity extends UI {
             }
 
             @Override
-            public void onFailure(Exception e) {
+            public void onFailure(BmobException e) {
+                if (e.getErrorCode() == 9010){
+                    Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                }else if (e.getErrorCode() == 9016){
+                    Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                }
                 imagePb.setVisibility(View.INVISIBLE);
             }
         });
@@ -255,6 +260,11 @@ public class GalaryInfoActivity extends UI {
                         if(e==null){
                             deleteGalary();
                         }else{
+                            if (e.getErrorCode() == 9010){
+                                Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                            }else if (e.getErrorCode() == 9016){
+                                Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                            }
                             Log.e("deleteImages","失败："+e.getMessage()+","+e.getErrorCode());
                         }
                     }
@@ -262,7 +272,12 @@ public class GalaryInfoActivity extends UI {
             }
 
             @Override
-            public void onFailure(Exception e) {
+            public void onFailure(BmobException e) {
+                if (e.getErrorCode() == 9010){
+                    Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                }else if (e.getErrorCode() == 9016){
+                    Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                }
                 Log.e("queryImagesInfo","失败："+e.getMessage());
             }
 

@@ -129,6 +129,13 @@ public class DynamicsActivity extends BaseActivity {
                             }
                         }
                     });
+                }else {
+                    if (e.getErrorCode() == 9010){
+                        Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                    }else if (e.getErrorCode() == 9016){
+                        Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                    }
+                    Log.e(TAG,"fetchCommit:"+e.getMessage());
                 }
             }
         });
@@ -144,6 +151,11 @@ public class DynamicsActivity extends BaseActivity {
                     adapter.notifyItemRemoved(index);
                     adapter.notifyDataSetChanged();
                 }else {
+                    if (e.getErrorCode() == 9010){
+                        Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                    }else if (e.getErrorCode() == 9016){
+                        Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                    }
                     Toast.makeText(mContext, "删除留言失败", Toast.LENGTH_SHORT).show();
                     Log.e(TAG,"exception:"+e.getMessage());
                 }
@@ -167,6 +179,11 @@ public class DynamicsActivity extends BaseActivity {
                         Log.e(TAG, "查询成功，无数据返回");
                     }
                 }else{
+                    if (e.getErrorCode() == 9010){
+                        Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                    }else if (e.getErrorCode() == 9016){
+                        Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                    }
                     Log.e(TAG, "错误码："+e.getErrorCode()+"，错误描述："+e.getMessage());
                 }
                 dyPb.setVisibility(View.INVISIBLE);

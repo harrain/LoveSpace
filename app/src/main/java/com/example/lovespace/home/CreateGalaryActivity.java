@@ -1,10 +1,12 @@
 package com.example.lovespace.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -20,6 +22,7 @@ import com.netease.nim.uikit.common.activity.UI;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.bmob.v3.exception.BmobException;
 
 public class CreateGalaryActivity extends UI {
 
@@ -35,13 +38,15 @@ public class CreateGalaryActivity extends UI {
     ProgressBar cPb;
 
     private String cid;
+    private String TAG = "CreateGalaryActivity";
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_galary);
         ButterKnife.bind(this);
-
+        mContext = this;
         setSupportActionBar(toolbar);
         left.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,9 +70,14 @@ public class CreateGalaryActivity extends UI {
                     }
 
                     @Override
-                    public void onFailure(Exception e) {
+                    public void onFailure(BmobException e) {
                         cPb.setVisibility(View.INVISIBLE);
                         Toast.makeText(CreateGalaryActivity.this, "创建相册失败", Toast.LENGTH_SHORT).show();
+                        if (e.getErrorCode() == 9010){
+                            Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                        }else if (e.getErrorCode() == 9016){
+                            Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
@@ -94,8 +104,13 @@ public class CreateGalaryActivity extends UI {
                     }
 
                     @Override
-                    public void onFailure(Exception e) {
-
+                    public void onFailure(BmobException e) {
+                        if (e.getErrorCode() == 9010){
+                            Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                        }else if (e.getErrorCode() == 9016){
+                            Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                        }
+                        Log.e(TAG,"queryGalaryInfo:"+e.getMessage());
                     }
                 });
 
