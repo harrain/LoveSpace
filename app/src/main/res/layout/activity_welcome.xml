@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_welcome"
     android:layout_width="match_parent"
@@ -7,10 +7,16 @@
     android:orientation="vertical"
     tools:context="com.example.lovespace.main.activity.WelcomeActivity">
 
+    <ImageView
+        android:scaleType="fitXY"
+        android:src="@drawable/splash_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
     <TextView
+        android:visibility="invisible"
         android:text="欢迎使用"
         android:layout_marginTop="100dp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-</LinearLayout>
+</RelativeLayout>

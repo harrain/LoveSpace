@@ -15,7 +15,7 @@
 
         <ImageView
             android:fitsSystemWindows="true"
-            android:src="@mipmap/bixin"
+            android:src="@drawable/stone_heart"
             android:scaleType="fitXY"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

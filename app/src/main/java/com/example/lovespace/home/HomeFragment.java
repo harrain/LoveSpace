@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     Unbinder unbind;
     private String TAG = "HomeFragment";
     DateUtil dateUtil;
+    private String otherAccount;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,10 +81,12 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        otherAccount = Preferences.getOtherAccount();
         getUserInfo(DemoCache.getAccount());
-        getUserInfo(Preferences.getOtherAccount());
+        getUserInfo(otherAccount);
         if (DemoCache.getCoupleDays() != 0){
             homeDate.setText("我们在一起 "+DemoCache.getCoupleDays()+" 天");
+
         }else {
             coupledays();
         }
@@ -101,9 +105,17 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                         List<Integer> cd = dateUtil.string2int(dateUtil.date2string(d));
                         Date date = new Date();
                         List<Integer> currents = dateUtil.string2int(dateUtil.date2string(date));
-                        int dd = dateUtil.onlyDays(cd,currents);
-                        DemoCache.setCoupleDays(dd);
-                        homeDate.setText("我们在一起 "+dd+" 天");
+                        if (cd.get(0).equals(currents.get(0))){
+                            int anniday = countAnnidays(cd.get(0),cd.get(1),cd.get(2));
+                            int currentday = countAnnidays(currents.get(0),currents.get(1),currents.get(2));
+                            int dd = currentday - anniday;
+                            DemoCache.setCoupleDays(dd);
+                            homeDate.setText("我们在一起 " + dd + " 天");
+                        }else {
+                            int dd = dateUtil.onlyDays(cd, currents);
+                            DemoCache.setCoupleDays(dd);
+                            homeDate.setText("我们在一起 " + dd + " 天");
+                        }
                     }
                 }else {
                     Log.e(TAG,"fetchCouple:"+e.getMessage());
@@ -117,20 +129,47 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         });
     }
 
+    public int countAnnidays(int year,int month,int day){
+        dateUtil.year = year;
+        Log.e(TAG,"year:"+dateUtil.year);
+        dateUtil.month = month;
+        Log.e(TAG,"month:"+dateUtil.month);
+        dateUtil.day = day;
+        Log.e(TAG,"day:"+dateUtil.day);
+        return dateUtil.countDays();
+
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 0:
-                startActivity(new Intent(mContext, AnnversaryActivity.class));
+
+                if (!TextUtils.isEmpty(otherAccount)) {
+                    startActivity(new Intent(mContext, AnnversaryActivity.class));
+                }else {
+                    Toast.makeText(mContext, "您还没添加另一半，不能使用纪念日功能！", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case 1:
-                startActivity(new Intent(mContext, GalaryActivity.class));
+
+                if (!TextUtils.isEmpty(otherAccount)) {
+                    startActivity(new Intent(mContext, GalaryActivity.class));
+                }else {
+                    Toast.makeText(mContext, "您还没添加另一半，不能使用相册功能！", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
             case 2:
                 startActivity(new Intent(mContext, AlarmActivity.class));
                 break;
             case 3:
-                startActivity(new Intent(mContext, DynamicsActivity.class));
+                if (!TextUtils.isEmpty(otherAccount)) {
+                    startActivity(new Intent(mContext, DynamicsActivity.class));
+                }else {
+                    Toast.makeText(mContext, "您还没添加另一半，不能使用留言板功能！", Toast.LENGTH_SHORT).show();
+                }
+
                 break;
         }
     }
@@ -210,9 +249,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     private void updateUI(String anchor) {
-        if (anchor == DemoCache.getAccount()) {
+        if (anchor.equals(DemoCache.getAccount())){
             homeMeHead.loadBuddyAvatar(anchor);
-        }else {
+        }else{
             homeOtherHead.loadBuddyAvatar(anchor);
         }
     }
