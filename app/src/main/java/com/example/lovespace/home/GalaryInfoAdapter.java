@@ -1,6 +1,7 @@
 package com.example.lovespace.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.lovespace.R;
+import com.example.lovespace.main.model.bean.Image;
 
 import java.util.List;
 
@@ -25,11 +27,13 @@ public class GalaryInfoAdapter extends RecyclerView.Adapter <GalaryInfoAdapter.I
 
     private Context mContext;
     private List<String> imagePaths;
+    private List<Image> imageList;
     private static  final String TAG = "GalaryInfoAdapter";
 
-    public GalaryInfoAdapter(Context context, List<String> list) {
+    public GalaryInfoAdapter(Context context, List<String> list,List<Image> images) {
         mContext = context;
         imagePaths = list;
+        imageList = images;
         if (imagePaths == null) {
             Log.e(TAG, "image集合空");
         }else {
@@ -46,9 +50,18 @@ public class GalaryInfoAdapter extends RecyclerView.Adapter <GalaryInfoAdapter.I
     }
 
     @Override
-    public void onBindViewHolder(ImageHolder holder, int position) {
+    public void onBindViewHolder(ImageHolder holder, final int position) {
         Log.e(TAG,"imagePath:"+imagePaths.get(position));
         Glide.with(mContext).load(imagePaths.get(position)).into(holder.galaryinfoIv);
+        holder.galaryinfoIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext,ImageActivity.class);
+                intent.putExtra("imagepath",imagePaths.get(position));
+                intent.putExtra("objectId",imageList.get(position).getObjectId());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
