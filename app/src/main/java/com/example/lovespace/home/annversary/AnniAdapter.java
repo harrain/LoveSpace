@@ -216,10 +216,53 @@ public class AnniAdapter extends RecyclerView.Adapter {
             dateTv.setText(list.get(2)+"");
 
             Date date = new Date();
-            int anniday = countAnnidays(list.get(0),list.get(1),list.get(2));
             List<Integer> currents = dateUtil.string2int(dateUtil.date2string(date));
+            long dl = dateUtil.date2long(day);
+            long dal = dateUtil.date2long(date);
+            if (annis.get(index).getAnniname().contains("生日")){
+                list.add(0,currents.get(0));
+                String month1 = null;
+                String d1 = null;
+                if (list.get(1)<10)  month1 = "0"+list.get(1);
+                if (list.get(2)<10)  d1 = "0"+list.get(2);
+                long newa = dateUtil.date2long(list.get(0)+"-"+month1+d1);
+                if (newa > dal){
+                    sameYear(list,currents,day,date,index,dl,dal);
+                }else {
+                    list.add(0,currents.get(0)+1);
+                    int d = dateUtil.onlyDays(list,currents);
+                    titleContent.setText(annis.get(index).getAnniname() +" 还有");
+                    dayTv.setText(d+"天");
+                }
+            }
+
+            if (list.get(0).equals(currents.get(0))){
+
+                sameYear(list,currents,day,date,index,dl,dal);
+            }else {
+                int d = dateUtil.onlyDays(list,currents);
+                if ( dl> dal){
+                    titleContent.setText(annis.get(index).getAnniname() +" 还有");
+                    dayTv.setText(d+"天");
+
+                }else {
+                    titleContent.setText(annis.get(index).getAnniname() +" 已经");
+                    dayTv.setText(d+"天");
+                }
+            }
+
+
+        }
+
+        private void sameYear(List<Integer> list,List<Integer> currents,String day,Date date,int index,long dl,long dal){
+            int anniday = countAnnidays(list.get(0),list.get(1),list.get(2));
             int currentday = countAnnidays(currents.get(0),currents.get(1),currents.get(2));
-            if (dateUtil.date2long(day) > dateUtil.date2long(date)){
+
+            Log.e(TAG,"anniday:"+anniday);
+            Log.e(TAG,"currentday:"+currentday);
+            Log.e(TAG,"date2long(day):"+dateUtil.date2long(day));
+            Log.e(TAG,"date2long(date):"+dateUtil.date2long(date));
+            if (dl >dal){
                 titleContent.setText(annis.get(index).getAnniname() +" 还有");
                 dayTv.setText(anniday-currentday+"天");
 
@@ -227,13 +270,15 @@ public class AnniAdapter extends RecyclerView.Adapter {
                 titleContent.setText(annis.get(index).getAnniname() +" 已经");
                 dayTv.setText(currentday-anniday+"天");
             }
-
         }
 
         public int countAnnidays(int year,int month,int day){
             dateUtil.year = year;
+            Log.e(TAG,"year:"+dateUtil.year);
             dateUtil.month = month;
+            Log.e(TAG,"month:"+dateUtil.month);
             dateUtil.day = day;
+            Log.e(TAG,"day:"+dateUtil.day);
             return dateUtil.countDays();
 
         }

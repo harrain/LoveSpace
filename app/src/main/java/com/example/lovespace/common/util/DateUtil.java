@@ -1,5 +1,7 @@
 package com.example.lovespace.common.util;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,7 +18,8 @@ public class DateUtil {
     int dayOfMonth[] = {31,28,31,30,31,30,31,31,30,31,30,31};//将每个月的日期写在数组里
     int i=0;
     public int year,month,day;		//年、月、日
-    int dayCount =0;	//天数
+    private String TAG = "DateUtil";
+
 
     private  boolean IsWrong(int year, int month, int day) { 	//判断年月日是否有错
         boolean a=false,b=false,c=false;
@@ -39,11 +42,12 @@ public class DateUtil {
         return i;
     }
 
-    private  boolean IsLeapYear(int year) { 	//判断闰年
+    public boolean IsLeapYear(int year) { 	//判断闰年
         boolean i=false;
         if(year%4==0 && year%100!=0 || year%400==0)i=true;
         return i;
     }
+
 
     public String date2string(Date date){
 
@@ -60,6 +64,7 @@ public class DateUtil {
         Date date = null;
         try {
             date = sdf.parse(str);//字符串转成date
+            Log.e(TAG,"str2date:"+date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -107,6 +112,7 @@ public class DateUtil {
     }
 
     public int countDays(){
+        int dayCount =0;	//天数
         if(IsLeapYear(year))dayOfMonth[1]=29;	//判断闰年后2月份变为29天
         for(i=0;i<=month-2;i++){	//计算这个月之前的总天数
             dayCount = dayCount + dayOfMonth[i];
@@ -123,5 +129,73 @@ public class DateUtil {
             i.add(Integer.parseInt(str));
         }
         return i;
+    }
+
+    //计算不同年的日子
+    public int onlyDays(List<Integer> list,List<Integer> currents){
+        if (list.get(0) > currents.get(0)){
+            int a = list.get(0) - currents.get(0);
+            year = currents.get(0);
+            month = currents.get(1);
+            day = currents.get(2);
+            int d = countDays();
+            int count  = 0;
+            if (IsLeapYear(year)){
+                count = 366 - d;
+            }else {
+                count = 365 -d;
+            }
+            if (a == 1){
+                year = list.get(0);
+                month = list.get(1);
+                day = list.get(2);
+                count += countDays();
+                return count;
+            }
+            for(int i = 1;i<a;i++){
+                if (IsLeapYear(year+i)){
+                    count += 366;
+                }else {
+                    count += 365;
+                }
+            }
+            year = list.get(0);
+            month = list.get(1);
+            day = list.get(2);
+            count += countDays();
+            return count;
+        }else if (currents.get(0) > list.get(0)){
+            int a = currents.get(0) - list.get(0);
+            year = list.get(0);
+            month = list.get(1);
+            day = list.get(2);
+            int d = countDays();
+            int count  = 0;
+            if (IsLeapYear(year)){
+                count = 366 - d;
+            }else {
+                count = 365 -d;
+            }
+            if (a == 1){
+                year = currents.get(0);
+                month = currents.get(1);
+                day = currents.get(2);
+                count += countDays();
+                return count;
+            }
+            for(int i = 1;i<a;i++){
+                if (IsLeapYear(year+i)){
+                    count += 366;
+                }else {
+                    count += 365;
+                }
+            }
+            year = currents.get(0);
+            month = currents.get(1);
+            day = currents.get(2);
+            count += countDays();
+            return count;
+        }
+        return 0;
     }
 }
