@@ -37,6 +37,7 @@ public class CreateDyActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 cdyPb.setVisibility(View.VISIBLE);
+                Log.e(TAG,"uid:"+Preferences.getUserId());
                 DyDao.addDy(dyContentEt.getText().toString(), Preferences.getUserId(),
                         Preferences.getCoupleId()
                         , new SaveListener<String>() {

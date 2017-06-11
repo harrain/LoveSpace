@@ -3,12 +3,15 @@ package com.example.lovespace.home.dynamics;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.lovespace.DemoCache;
 import com.example.lovespace.R;
+import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.main.model.bean.Dynamics;
 import com.netease.nim.uikit.common.ui.imageview.HeadImageView;
 
@@ -23,12 +26,14 @@ import butterknife.ButterKnife;
 
 public class DynamicsAdapter extends RecyclerView.Adapter<DynamicsAdapter.DYHolder> {
 
+    private final String TAG = "DynamicsAdapter";
     Context mContext;
     List<Dynamics> dys;
 
     public DynamicsAdapter(Context context,List<Dynamics> list) {
         mContext = context;
         dys = list;
+        Log.e(TAG,"dys:"+dys.size());
     }
 
     public interface OnItemClickListener {
@@ -92,7 +97,16 @@ public class DynamicsAdapter extends RecyclerView.Adapter<DynamicsAdapter.DYHold
         }
 
         public void bind(int position) {
-            dyHead.loadBuddyAvatar(dys.get(position).getUid());
+            if (dys.get(position).getUid().equals(Preferences.getUserId())) {
+                Log.e(TAG,"uid:"+Preferences.getUserId());
+                dyHead.loadBuddyAvatar(DemoCache.getAccount());
+                Log.e(TAG,"uaccount:"+DemoCache.getAccount());
+            }else {
+                Log.e(TAG,"uid:"+dys.get(position).getUid());
+                Log.e(TAG,"uid:"+Preferences.getUserId());
+                dyHead.loadBuddyAvatar(Preferences.getOtherAccount());
+                Log.e(TAG,"oaccount:"+Preferences.getOtherAccount());
+            }
             dyContent.setText(dys.get(position).getContent());
             dyTime.setText(dys.get(position).getCreatedAt());
         }
