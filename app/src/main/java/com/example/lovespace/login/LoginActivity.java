@@ -13,8 +13,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +45,8 @@ import com.netease.nimlib.sdk.friend.FriendService;
 
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
+
 
 public class LoginActivity extends UI implements View.OnKeyListener{
 
@@ -72,6 +72,7 @@ public class LoginActivity extends UI implements View.OnKeyListener{
     private String TAG = "Login";
     private String account;
     private String token;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,7 @@ public class LoginActivity extends UI implements View.OnKeyListener{
         options.isNeedNavigate = false;
         options.logoId = R.drawable.actionbar_white_logo_space;
         setToolBar(R.id.toolbar, options);
-
+        mContext = this;
         requestBasicPermission();
 
         initRightTopBtn();
@@ -305,8 +306,13 @@ public class LoginActivity extends UI implements View.OnKeyListener{
             }
 
             @Override
-            public void onFailure(Exception e) {
-
+            public void onFailure(BmobException e) {
+                Log.e(TAG,"queryUserInfo:"+e.getMessage());
+                if (e.getErrorCode() == 9010){
+                    Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                }else if (e.getErrorCode() == 9016){
+                    Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

@@ -1,9 +1,11 @@
 package com.example.lovespace.main.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.lovespace.DemoCache;
 import com.example.lovespace.MainActivity;
@@ -19,6 +21,8 @@ import com.netease.nimlib.sdk.friend.FriendService;
 
 import java.util.List;
 
+import cn.bmob.v3.exception.BmobException;
+
 public class WelcomeActivity extends UI {
 
     private static final String TAG = "WelcomeActivity";
@@ -27,12 +31,13 @@ public class WelcomeActivity extends UI {
 
     private static boolean firstEnter = true; // 是否首次进入
     private String account;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-
+        mContext = this;
         if (savedInstanceState != null) {
             setIntent(new Intent()); // 从堆栈恢复，不再重复解析之前的intent
         }
@@ -110,8 +115,13 @@ public class WelcomeActivity extends UI {
             }
 
             @Override
-            public void onFailure(Exception e) {
-
+            public void onFailure(BmobException e) {
+                Log.e(TAG,"queryUserInfo:"+e.getMessage());
+                if (e.getErrorCode() == 9010){
+                    Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                }else if (e.getErrorCode() == 9016){
+                    Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
