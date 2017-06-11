@@ -235,7 +235,7 @@ public class LoginActivity extends UI implements View.OnKeyListener{
         // 登录
 
         //修改了NimUIKit的默认登录方法，因为其中的接口都是demo的。修改appkey要修改URL和传入的header
-        loginRequest = NimUIKit.doLogin(new LoginInfo(account, token), new RequestCallback<LoginInfo>() {
+        loginRequest = NimUIKit.doLogin(new LoginInfo(account, Preferences.getUserToken()), new RequestCallback<LoginInfo>() {
             @Override
             public void onSuccess(LoginInfo param) {
                 LogUtil.i(TAG, "login success");

@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.lovespace.DemoCache;
 import com.example.lovespace.common.util.CheckSumBuilder;
 import com.example.lovespace.config.DemoServers;
+import com.example.lovespace.config.preference.Preferences;
 import com.netease.nim.uikit.common.http.NimHttpClient;
 import com.netease.nim.uikit.common.util.log.LogUtil;
 import com.netease.nim.uikit.common.util.string.MD5;
@@ -131,6 +132,9 @@ public class ContactHttpClient {
                         + (exception != null ? exception.getMessage() : "null"));
                 try {
                     JSONObject resObj = JSONObject.parseObject(response);
+                    JSONObject obj = resObj.getJSONObject("info");
+                    String token = obj.getString("token");
+                    Preferences.saveUserToken(token);
                     int resCode = resObj.getIntValue(RESULT_KEY_RES);
                     if (resCode == RESULT_CODE_SUCCESS) {
                         callback.onSuccess(null);
