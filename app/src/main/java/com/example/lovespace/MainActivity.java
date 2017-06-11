@@ -57,13 +57,10 @@ public class MainActivity extends UI {
         ButterKnife.bind(this);
 
         fm = getSupportFragmentManager();
-        ft = fm.beginTransaction();
+
         if (homeFragment == null) homeFragment = new HomeFragment();
         if (meFragment == null) meFragment = new MeFragment();
-        ft.add(R.id.hold_fragment,homeFragment);
-        ft.add(R.id.hold_fragment,meFragment);
-        ft.hide(meFragment);
-        ft.commit();
+        tab_home.performClick();
 
     }
 
@@ -76,7 +73,7 @@ public class MainActivity extends UI {
     @OnClick(R.id.tab_home)
     public void selectHomeFragment(){
         FragmentTransaction f = fm.beginTransaction();
-        f.hide(meFragment);
+        f.replace(R.id.hold_fragment,homeFragment);
         f.show(homeFragment);
         f.commit();
         selectHomeBackground();
@@ -100,7 +97,7 @@ public class MainActivity extends UI {
     @OnClick(R.id.tab_me)
     public void selectMeFragment(){
         FragmentTransaction f = fm.beginTransaction();
-        f.hide(homeFragment);
+        f.replace(R.id.hold_fragment,meFragment);
         f.show(meFragment);
         f.commit();
         selectMeBackground();

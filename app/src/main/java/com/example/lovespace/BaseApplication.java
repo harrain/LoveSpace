@@ -13,11 +13,11 @@ import android.text.TextUtils;
 import com.example.lovespace.common.util.sys.SystemUtil;
 import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.config.preference.UserPreferences;
+import com.example.lovespace.main.activity.WelcomeActivity;
 import com.example.lovespace.session.NimDemoLocationProvider;
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.contact.core.query.PinYin;
 import com.netease.nim.uikit.custom.DefalutUserInfoProvider;
-import com.netease.nim.uikit.session.activity.P2PMessageActivity;
 import com.netease.nim.uikit.session.viewholder.MsgViewHolderThumbBase;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.NimStrings;
@@ -170,7 +170,7 @@ public class BaseApplication extends Application {
     private StatusBarNotificationConfig loadStatusBarNotificationConfig(){
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
         //点击通知跳转到的界面
-        config.notificationEntrance = P2PMessageActivity.class;
+        config.notificationEntrance = WelcomeActivity.class;
         config.notificationSmallIconId = R.mipmap.ic_stat_notify_msg;
         //通知铃声uri
         config.notificationSound = "android.resource://com.example.lovespace/raw/msg";
