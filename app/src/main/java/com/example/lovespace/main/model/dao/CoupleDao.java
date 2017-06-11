@@ -2,6 +2,8 @@ package com.example.lovespace.main.model.dao;
 
 import com.example.lovespace.main.model.bean.Couple;
 
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
@@ -21,5 +23,12 @@ public class CoupleDao {
         Couple couple = new Couple();
         couple.setObjectId(objectId);
         couple.delete(objectId,listener);
+    }
+
+    public static void fetchCouple(String cid, SQLQueryListener<Couple> listener){
+        String bql = "select * from Couple where objectId = '"+cid+"'";
+        BmobQuery<Couple> query = new BmobQuery<>();
+        query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.doSQLQuery(bql,listener);
     }
 }

@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.lovespace.DemoCache;
 import com.example.lovespace.R;
 import com.example.lovespace.common.util.DateUtil;
 import com.example.lovespace.main.model.bean.Anni;
@@ -130,6 +131,8 @@ public class AnniAdapter extends RecyclerView.Adapter {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }else {
+            ((HeadHolder)holder).bind();
         }
 
     }
@@ -184,6 +187,11 @@ public class AnniAdapter extends RecyclerView.Adapter {
         HeadHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+        public void bind() {
+            startday.setText(DemoCache.getStartTime());
+            daycountTv.setText(DemoCache.getCoupleDays()+"天");
         }
     }
 

@@ -16,6 +16,8 @@ public class DemoCache {
 
     private static Context context;
     private static String account ;
+    private static int coupleDays;
+    private static String startTime;
     private static StatusBarNotificationConfig notificationConfig;
 
     public static void setAccount(String account){
@@ -46,5 +48,21 @@ public class DemoCache {
 
     public static void clear() {
         account = null;
+    }
+
+    public static void setCoupleDays(int coupleDays) {
+        DemoCache.coupleDays = coupleDays;
+    }
+
+    public static int getCoupleDays() {
+        return coupleDays;
+    }
+
+    public static void setStartTime(String startTime) {
+        DemoCache.startTime = startTime;
+    }
+
+    public static String getStartTime() {
+        return startTime;
     }
 }

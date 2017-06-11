@@ -20,18 +20,27 @@ import android.widget.Toast;
 import com.example.lovespace.BaseApplication;
 import com.example.lovespace.DemoCache;
 import com.example.lovespace.R;
+import com.example.lovespace.common.util.DateUtil;
 import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.home.alarm.AlarmActivity;
 import com.example.lovespace.home.annversary.AnnversaryActivity;
 import com.example.lovespace.home.dynamics.DynamicsActivity;
+import com.example.lovespace.main.model.bean.Couple;
+import com.example.lovespace.main.model.dao.CoupleDao;
 import com.netease.nim.uikit.cache.NimUserInfoCache;
 import com.netease.nim.uikit.common.ui.imageview.HeadImageView;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
+import java.util.Date;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.bmob.v3.datatype.BmobQueryResult;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SQLQueryListener;
 
 
 public class HomeFragment extends Fragment implements AdapterView.OnItemClickListener {
@@ -52,6 +61,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     private Context mContext;
     private NimUserInfo userInfo;
     Unbinder unbind;
+    private String TAG = "HomeFragment";
+    DateUtil dateUtil;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,6 +70,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         unbind = ButterKnife.bind(this, view);
         mContext = getActivity();
+        dateUtil = new DateUtil();
         home_grid.setAdapter(new HomeAdapter());
         home_grid.setOnItemClickListener(this);
         return view;
@@ -69,6 +81,40 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         super.onActivityCreated(savedInstanceState);
         getUserInfo(DemoCache.getAccount());
         getUserInfo(Preferences.getOtherAccount());
+        if (DemoCache.getCoupleDays() != 0){
+            homeDate.setText("我们在一起 "+DemoCache.getCoupleDays()+" 天");
+        }else {
+            coupledays();
+        }
+    }
+
+    private void coupledays() {
+        CoupleDao.fetchCouple(Preferences.getCoupleId(), new SQLQueryListener<Couple>() {
+            @Override
+            public void done(BmobQueryResult<Couple> result, BmobException e) {
+                if (e==null){
+                    List<Couple> list = result.getResults();
+                    if (list.size()>0){
+                        String start = list.get(0).getCreatedAt();
+                        DemoCache.setStartTime(start);
+                        Date d = dateUtil.string2date(start);
+                        List<Integer> cd = dateUtil.string2int(dateUtil.date2string(d));
+                        Date date = new Date();
+                        List<Integer> currents = dateUtil.string2int(dateUtil.date2string(date));
+                        int dd = dateUtil.onlyDays(cd,currents);
+                        DemoCache.setCoupleDays(dd);
+                        homeDate.setText("我们在一起 "+dd+" 天");
+                    }
+                }else {
+                    Log.e(TAG,"fetchCouple:"+e.getMessage());
+                    if (e.getErrorCode() == 9010){
+                        Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                    }else if (e.getErrorCode() == 9016){
+                        Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 
     @Override

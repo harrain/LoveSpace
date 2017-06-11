@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -71,8 +70,8 @@ public class DateUtil {
         return date;
     }
 
-    public void string2date(){
-        String datestr = "2017-05-20 09:08:07";
+    public Date string2date(String datestr){
+        //String datestr = "2017-05-20 09:08:07";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
         try {
@@ -84,14 +83,15 @@ public class DateUtil {
 
         System.out.println(date);
         System.out.println("-----------------------------------------------------------");
-        long msec1 = date.getTime();
+        return date;
+        /*long msec1 = date.getTime();
         System.out.println("mesc:"+msec1);
         GregorianCalendar gc = new GregorianCalendar();
         gc.setTimeInMillis(msec1);
         long times = gc.getTimeInMillis();//转成long类型
         System.out.println(times);
 
-        String dateStr = sdf.format(gc.getTime());//转成Date字符串形式
+        String dateStr = sdf.format(gc.getTime());//转成Date字符串形式*/
 
     }
 

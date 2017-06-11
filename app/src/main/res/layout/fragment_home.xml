@@ -51,7 +51,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="40dp"
                 android:layout_marginTop="10dp"
-                android:text="我们在一起 100 天"
+                android:text="我们在一起 0 天"
                 android:textSize="18sp"
                 android:gravity="center"
                 android:textColor="@android:color/white"
