@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReltiveLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/up_title"
+        android:text="修改相册名称"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <EditText
+        android:id="@+id/up_game"
+        android:textSize="16sp"
+        android:layout_below="@id/up_title"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <Button
+        android:id="@+id/up_cancel"
+        android:text="取消"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/galary_up_btn"
+        android:layout_below="@id/up_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/up_done"
+        android:text="确定"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/up_cancel"
+        android:layout_marginLeft="20dp"
+        android:background="@drawable/galary_up_btn"
+        android:layout_below="@id/up_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+</ReltiveLayout>

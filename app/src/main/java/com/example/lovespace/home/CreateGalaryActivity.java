@@ -107,8 +107,8 @@ public class CreateGalaryActivity extends UI {
 
     private void onSuccessDone(){
         Intent intent = new Intent(CreateGalaryActivity.this,GalaryActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
     }
 
 

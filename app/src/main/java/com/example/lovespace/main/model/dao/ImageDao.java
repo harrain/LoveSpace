@@ -7,9 +7,13 @@ import com.example.lovespace.main.model.bean.Image;
 
 import java.util.List;
 
+import cn.bmob.v3.BmobBatch;
+import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BatchResult;
 import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListListener;
 import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
@@ -71,5 +75,9 @@ public class ImageDao {
         Image image = new Image();
         image.setObjectId(objectId);
         image.delete(objectId,listener);
+    }
+
+    public static void deleteImages(List<BmobObject> list, QueryListListener<BatchResult> listener){
+        new BmobBatch().deleteBatch(list).doBatch(listener);
     }
 }

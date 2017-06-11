@@ -60,6 +60,7 @@
         <Button
             android:id="@+id/upload_pic_btn"
             android:text="上传照片"
+            android:background="@drawable/galary_up_btn"
             android:layout_below="@id/subtext"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"

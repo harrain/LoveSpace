@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -40,6 +41,7 @@ public class GalaryActivity extends UI {
     private List<Galary> galaries;
     private GalaryAdapter adapter;
     private String cid;
+    private String TAG = "GalaryActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class GalaryActivity extends UI {
             GalaryDao.fetchGalarys(cid, new OnCompleteListener<List<Galary>>() {
                 @Override
                 public void onSuccess(List<Galary> data) {
+                    galaries.clear();
                     galaries.addAll(data);
                     progressBar.setVisibility(View.INVISIBLE);
                     galaryNumTv.setText("相册| "+galaries.size());
@@ -105,7 +108,7 @@ public class GalaryActivity extends UI {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        galaries.clear();
+        Log.e(TAG,"onNewIntent");
         refreshUI();
     }
 

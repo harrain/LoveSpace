@@ -2,6 +2,7 @@ package com.example.lovespace.home;
 
 import android.annotation.TargetApi;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,12 +10,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,6 +31,7 @@ import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.listener.OnCompleteListener;
 import com.example.lovespace.main.model.bean.Galary;
 import com.example.lovespace.main.model.bean.Image;
+import com.example.lovespace.main.model.dao.GalaryDao;
 import com.example.lovespace.main.model.dao.ImageDao;
 import com.netease.nim.uikit.common.activity.UI;
 
@@ -35,8 +42,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BatchResult;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
@@ -69,12 +79,15 @@ public class GalaryInfoActivity extends UI {
     private String cid;
     private String gtime;
     private int isum;
+    private List<Image> images;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_galary_info);
         ButterKnife.bind(this);
+        mContext = this;
 
         setSupportActionBar(toolbar);
         if (toolbar != null) {
@@ -86,6 +99,7 @@ public class GalaryInfoActivity extends UI {
             });
         }
         imagePaths = new ArrayList<>();
+        images = new ArrayList<>();
         initRecyclerview();
         Intent intent = getIntent();
         gid = intent.getStringExtra("gid");
@@ -93,7 +107,7 @@ public class GalaryInfoActivity extends UI {
         gtime = intent.getStringExtra("gtime");
         isum = intent.getIntExtra("isum",0);
         setUpView();
-
+        registerForContextMenu(moreSetBtn);
         cid = Preferences.getCoupleId();
         loadData();
     }
@@ -108,6 +122,8 @@ public class GalaryInfoActivity extends UI {
         ImageDao.queryImagesInfo(gid, cid, new OnCompleteListener<List<Image>>() {
             @Override
             public void onSuccess(List<Image> data) {
+                images.clear();
+                images.addAll(data);
                 for (Image image:data) {
                     imagePaths.add(image.getImageurl());
                 }
@@ -129,7 +145,7 @@ public class GalaryInfoActivity extends UI {
     public void initRecyclerview(){
         GridLayoutManager layoutManager = new GridLayoutManager(getmContext(),2);
         galaryinfoRv.setLayoutManager(layoutManager);
-        adapter = new GalaryInfoAdapter(getmContext(),imagePaths);
+        adapter = new GalaryInfoAdapter(getmContext(),imagePaths,images);
         galaryinfoRv.setAdapter(adapter);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.spacing);
         galaryinfoRv.addItemDecoration(new SpaceItemDecoration(spacingInPixels));
@@ -149,6 +165,120 @@ public class GalaryInfoActivity extends UI {
                 handleImageBeforeKitKat(data);
             }
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.ginfo_menu,menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.update_gname:
+                upGnameDialog();
+                break;
+            case R.id.delete_galary:
+                delete();
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    private void upGnameDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        View view = View.inflate(mContext,R.layout.up_gname_dialog,null);
+        builder.setView(view,0,0,0,0);
+
+        final AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        final EditText upEt = (EditText) view.findViewById(R.id.update_gname);
+        Button cancel = (Button) view.findViewById(R.id.up_cancel);
+        Button done = (Button) view.findViewById(R.id.up_done);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                imagePb.setVisibility(View.VISIBLE);
+                GalaryDao.updateRow("galaryname", upEt.getText().toString(), gid, new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e==null){
+                            Toast.makeText(mContext, "修改相册名称成功", Toast.LENGTH_SHORT).show();
+                            giTitleTv.setText(upEt.getText().toString());
+                        }else {
+                            Toast.makeText(mContext, "修改相册名称失败", Toast.LENGTH_SHORT).show();
+                            Log.e(TAG,"update gname:"+e.getMessage());
+                        }
+                        imagePb.setVisibility(View.INVISIBLE);
+
+                    }
+                });
+            }
+        });
+
+    }
+
+    private void delete(){
+        ImageDao.queryImagesInfo(gid,Preferences.getCoupleId(),  new OnCompleteListener<List<Image>>() {
+            @Override
+            public void onSuccess(List<Image> result) {
+                List<Image> list = result;
+                if (list == null || list.size() == 0){
+                    deleteGalary();
+                    return;
+                }
+                List<BmobObject> o = new ArrayList<BmobObject>();
+                for (Image image : list) {
+                    Image c = new Image();
+                    c.setObjectId(image.getObjectId());
+                    o.add(c);
+                }
+                ImageDao.deleteImages(o, new QueryListListener<BatchResult>() {
+                    @Override
+                    public void done(List<BatchResult> list, BmobException e) {
+                        if(e==null){
+                            deleteGalary();
+                        }else{
+                            Log.e("deleteImages","失败："+e.getMessage()+","+e.getErrorCode());
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("queryImagesInfo","失败："+e.getMessage());
+            }
+
+        });
+    }
+
+    private void deleteGalary(){
+        GalaryDao.deleteRow(gid, new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null){
+                    Toast.makeText(mContext, "删除相册成功", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(mContext,GalaryActivity.class));
+                    finish();
+
+                }else {
+                    Toast.makeText(mContext, "删除相册失败", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG,"exception:"+e.getMessage());
+                }
+
+            }
+        });
     }
 
     @TargetApi(19)
@@ -271,6 +401,8 @@ public class GalaryInfoActivity extends UI {
         intent.setType("image/*");
         startActivityForResult(intent, CHOOSE_PHOTO); // 打开相册
     }
+
+
 
     private void onSuccessDone(){
         imagePb.setVisibility(View.INVISIBLE);

@@ -199,8 +199,11 @@
         <activity android:name=".me.UserProfileActivity" />
         <activity android:name=".me.UserProfileEditItemActivity" />
         <activity android:name=".me.AddFriendActivity" />
-        <activity android:name=".home.GalaryActivity" />
-        <activity android:name=".home.GalaryInfoActivity" />
+
+        <activity android:name=".home.GalaryActivity"
+            android:launchMode="singleTask"/>
+        <activity android:name=".home.GalaryInfoActivity"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".home.annversary.AnnversaryActivity"
             android:launchMode="singleTask" />
@@ -219,7 +222,8 @@
             android:name=".home.dynamics.DynamicsActivity"
             android:launchMode="singleTask" />
         <activity android:name=".home.dynamics.CreateDyActivity" />
-        <activity android:name=".home.dynamics.DyInfoActivity"/>
+        <activity android:name=".home.dynamics.DyInfoActivity" />
+        <activity android:name=".home.ImageActivity"/>
     </application>
 
 </manifest>
