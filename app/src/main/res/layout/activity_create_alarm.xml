@@ -46,6 +46,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:visibility="invisible"
         android:id="@+id/sync_rl"
         android:layout_marginTop="25dp"
         android:background="@color/white"
