@@ -445,7 +445,7 @@ public class OkHttpUtils<T> {
         int  total=0;//累加下载的字节数
         int percent=1;//下载的预期百分比
         int currentPer;//当前下载的百分比
-        mHandler.sendEmptyMessage(DOWNLOAD_START);
+        //mHandler.sendEmptyMessage(DOWNLOAD_START);
         while ((len=in.read(buffer)) != -1) {
             out.write(buffer,0,len);
             total+=len;
@@ -459,7 +459,7 @@ public class OkHttpUtils<T> {
                 percent=currentPer+1;
             }
         }
-        sendMessage(OkHttpUtils.DOWNLOAD_FINISH);
+        //sendMessage(OkHttpUtils.DOWNLOAD_FINISH);
     }
 
     public <T>  ArrayList<T> array2List(T[] array) {

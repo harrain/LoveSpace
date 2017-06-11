@@ -79,18 +79,39 @@ public class ImageActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResponse(Call call, Response response) throws IOException {
+                    public void onResponse(Call call, final Response response) throws IOException {
                         long timmillis = SystemClock.elapsedRealtime();
-                        File file = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES),timmillis+".jpg");
+                        final File file = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES),timmillis+".jpg");
 
                         Log.e(TAG,"imagelocal:"+file.getAbsolutePath());
-                        try {
-                            okHttpUtils.downloadFile(response,file);
-                            Toast.makeText(mContext, "成功保存到"+file.getAbsolutePath(), Toast.LENGTH_LONG).show();
-                            imaPb.setVisibility(View.INVISIBLE);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        okHttpUtils.downloadFile(response,file);
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(mContext, "成功保存到"+file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                                                Log.e(TAG,"成功保存");
+                                                imaPb.setVisibility(View.INVISIBLE);
+                                            }
+                                        });
+                                    } catch (final Exception e) {
+                                        e.printStackTrace();
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(mContext, "保存失败", Toast.LENGTH_SHORT).show();
+                                                Log.e(TAG,"saveimage:"+e.getMessage());
+                                                imaPb.setVisibility(View.INVISIBLE);
+                                            }
+                                        });
+                                    }
+                                }
+                            }).start();
+
                     }
                 })
                 .execute(new OkHttpUtils.OnCompleteListener<Object>() {
@@ -102,9 +123,7 @@ public class ImageActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(String error) {
-                        Toast.makeText(mContext, "保存失败", Toast.LENGTH_SHORT).show();
-                        Log.e(TAG,"saveimage:"+error);
-                        imaPb.setVisibility(View.INVISIBLE);
+
                     }
                 });
 
