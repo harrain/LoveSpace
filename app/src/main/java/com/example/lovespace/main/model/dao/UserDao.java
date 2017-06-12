@@ -7,13 +7,13 @@ import com.example.lovespace.listener.OnCompleteListener;
 import com.example.lovespace.main.model.bean.User;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
@@ -25,8 +25,8 @@ public class UserDao {
 
     private static String TAG = "UserDao";
 
-    public static void addToBomb(String name, String nick, String pass, String sex, Date birth, String cid){
-        User user = new User(name,nick,pass,sex,birth,cid);
+    public static void addToBomb(String name,String nick,String pass,String cid,String token){
+        User user = new User(name,nick,pass,cid,token);
         user.save(new SaveListener<String>() {
             @Override
             public void done(String objectId, BmobException e) {
@@ -64,6 +64,14 @@ public class UserDao {
 
         });
         //return users.size() == 0?null:users.get(0);
+    }
+
+    public static void obtainTokenForLogin(String username, String password, SQLQueryListener<User> listener){
+        String bql = "select * from User where username = '"+username+"' and where password = '"+password+"'";
+        BmobQuery<User> query = new BmobQuery<>();
+        query.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.doSQLQuery(bql,listener);
+
     }
 
     public static void deleteRow(String objectId, UpdateListener listener){

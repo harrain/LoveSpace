@@ -45,7 +45,9 @@ import com.netease.nimlib.sdk.friend.FriendService;
 
 import java.util.List;
 
+import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SQLQueryListener;
 
 
 public class LoginActivity extends UI implements View.OnKeyListener{
@@ -71,7 +73,7 @@ public class LoginActivity extends UI implements View.OnKeyListener{
 
     private String TAG = "Login";
     private String account;
-    private String token;
+    
     private Context mContext;
 
     @Override
@@ -226,24 +228,47 @@ public class LoginActivity extends UI implements View.OnKeyListener{
             }
         }).setCanceledOnTouchOutside(false);
 
+
+        account = loginAccountEdit.getEditableText().toString().toLowerCase();
+        String password = loginPasswordEdit.getEditableText().toString();
+        UserDao.obtainTokenForLogin(account, password, new SQLQueryListener<User>() {
+            @Override
+            public void done(BmobQueryResult<User> result, BmobException e) {
+                if(e == null){
+                    List<User> list = result.getResults();
+                    if (list.size()>0){
+                        loginToNim(account,list.get(0).getToken());
+                    }
+
+                }else {
+                    if (e.getErrorCode() == 9010){
+                        Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                    }else if (e.getErrorCode() == 9016){
+                        Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                    }
+                    Log.e(TAG,"obtainTokenForLogin:"+e.getMessage());
+                }
+            }
+        });
+        // 登录
+
+    }
+
+    private void loginToNim(final String acc, final String token){
         // 云信只提供消息通道，并不包含用户资料逻辑。开发者需要在管理后台或通过服务器接口将用户帐号和token同步到云信服务器。
         // 在这里直接使用同步到云信服务器的帐号和token登录。
         // 这里为了简便起见，demo就直接使用了密码的md5作为token。
         // 如果开发者直接使用这个demo，只更改appkey，然后就登入自己的账户体系的话，需要传入同步到云信服务器的token，而不是用户密码。
-        account = loginAccountEdit.getEditableText().toString().toLowerCase();
-        token = loginPasswordEdit.getEditableText().toString();
-        // 登录
 
-        //修改了NimUIKit的默认登录方法，因为其中的接口都是demo的。修改appkey要修改URL和传入的header
-        loginRequest = NimUIKit.doLogin(new LoginInfo(account, Preferences.getUserToken()), new RequestCallback<LoginInfo>() {
+        loginRequest = NimUIKit.doLogin(new LoginInfo(acc, Preferences.getUserToken()), new RequestCallback<LoginInfo>() {
             @Override
             public void onSuccess(LoginInfo param) {
                 LogUtil.i(TAG, "login success");
 
                 onLoginDone();
 
-                DemoCache.setAccount(account);
-                saveLoginInfo(account, token);
+                DemoCache.setAccount(acc);
+                saveLoginInfo(acc, token);
                 load();
                 searchFriend();
 
@@ -425,7 +450,7 @@ public class LoginActivity extends UI implements View.OnKeyListener{
         ContactHttpClient.getInstance().register(account, nickName, password, new ContactHttpClient.ContactHttpCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                UserDao.addToBomb(account,nickName,password,null,null,null);
+                UserDao.addToBomb(account,nickName,password,null,Preferences.getUserToken());
                 Toast.makeText(LoginActivity.this, R.string.register_success, Toast.LENGTH_SHORT).show();
                 switchMode();  // 切换回登录
                 loginAccountEdit.setText(account);

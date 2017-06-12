@@ -17,6 +17,7 @@ public class User extends BmobObject {
     private String sex;
     private Date birth;
     private String coupleid;
+    private String token;
 
 
     public User(){}
@@ -30,7 +31,13 @@ public class User extends BmobObject {
         coupleid = cid;
     }
 
-
+    public User(String name,String nick,String pass,String cid,String token){
+        username = name;
+        nickname = nick;
+        password = pass;
+        coupleid = cid;
+        this.token = token;
+    }
 
     public String getUsername() {
         return username;
@@ -80,7 +87,13 @@ public class User extends BmobObject {
         this.coupleid = coupleid;
     }
 
+    public String getToken() {
+        return token;
+    }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     @Override
     public String toString() {
@@ -89,6 +102,7 @@ public class User extends BmobObject {
                 ", username='" + username + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", password='" + password + '\'' +
+                ", token='" + token + '\'' +
                 ", sex='" + sex + '\'' +
                 ", birth=" + birth +
                 ", coupleid='" + coupleid + '\'' +
