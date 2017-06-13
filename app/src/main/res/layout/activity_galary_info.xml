@@ -6,35 +6,13 @@
     android:layout_height="match_parent"
     tools:context="com.example.lovespace.home.GalaryInfoActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
-        app:navigationIcon="@drawable/ab_life_detail_v2_back_btn"
-        android:background="@android:color/transparent">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageButton
-                android:id="@+id/more_set_btn"
-                android:src="@drawable/ab_life_detail_v2_menu_btn"
-                android:background="@android:color/transparent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:maxWidth="30dp"
-                android:maxHeight="30dp"/>
-        </RelativeLayout>
-
-    </android.support.v7.widget.Toolbar>
-
-    <RelativeLayout
+    <android.support.v7.widget.CardView
         android:id="@+id/head_rl"
-
+        android:elevation="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -67,11 +45,39 @@
             android:layout_marginBottom="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentTop="true"
+            app:navigationIcon="@drawable/ab_life_detail_v2_back_btn"
+            android:background="#d0ffffff">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/more_set_btn"
+                    android:src="@drawable/ab_life_detail_v2_menu_btn"
+                    android:background="@android:color/transparent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:maxWidth="30dp"
+                    android:maxHeight="30dp"/>
+            </RelativeLayout>
+
+        </android.support.v7.widget.Toolbar>
     </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/galaryinfo_rv"
         android:layout_below="@id/head_rl"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
