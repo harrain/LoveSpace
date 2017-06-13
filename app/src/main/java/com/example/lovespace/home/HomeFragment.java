@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +59,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     HeadImageView homeOtherHead;
     @BindView(R.id.home_date)
     TextView homeDate;
+    @BindView(R.id.home_title)
+    RelativeLayout homeTitleRl;
 
     private Context mContext;
     private NimUserInfo userInfo;
@@ -83,11 +86,14 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         super.onActivityCreated(savedInstanceState);
         otherAccount = Preferences.getOtherAccount();
         getUserInfo(DemoCache.getAccount());
+        if (TextUtils.isEmpty(otherAccount)) {
+            homeTitleRl.setVisibility(View.INVISIBLE);
+            return;
+        }
         getUserInfo(otherAccount);
-        if (DemoCache.getCoupleDays() != 0){
-            homeDate.setText("我们在一起 "+DemoCache.getCoupleDays()+" 天");
-
-        }else {
+        if (DemoCache.getCoupleDays() != 0) {
+            homeDate.setText("我们在一起 " + DemoCache.getCoupleDays() + " 天");
+        } else {
             coupledays();
         }
     }
@@ -96,32 +102,32 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         CoupleDao.fetchCouple(Preferences.getCoupleId(), new SQLQueryListener<Couple>() {
             @Override
             public void done(BmobQueryResult<Couple> result, BmobException e) {
-                if (e==null){
+                if (e == null) {
                     List<Couple> list = result.getResults();
-                    if (list.size()>0){
+                    if (list.size() > 0) {
                         String start = list.get(0).getCreatedAt();
                         DemoCache.setStartTime(start);
                         Date d = dateUtil.string2date(start);
                         List<Integer> cd = dateUtil.string2int(dateUtil.date2string(d));
                         Date date = new Date();
                         List<Integer> currents = dateUtil.string2int(dateUtil.date2string(date));
-                        if (cd.get(0).equals(currents.get(0))){
-                            int anniday = countAnnidays(cd.get(0),cd.get(1),cd.get(2));
-                            int currentday = countAnnidays(currents.get(0),currents.get(1),currents.get(2));
+                        if (cd.get(0).equals(currents.get(0))) {
+                            int anniday = countAnnidays(cd.get(0), cd.get(1), cd.get(2));
+                            int currentday = countAnnidays(currents.get(0), currents.get(1), currents.get(2));
                             int dd = currentday - anniday;
                             DemoCache.setCoupleDays(dd);
                             homeDate.setText("我们在一起 " + dd + " 天");
-                        }else {
+                        } else {
                             int dd = dateUtil.onlyDays(cd, currents);
                             DemoCache.setCoupleDays(dd);
                             homeDate.setText("我们在一起 " + dd + " 天");
                         }
                     }
-                }else {
-                    Log.e(TAG,"fetchCouple:"+e.getMessage());
-                    if (e.getErrorCode() == 9010){
+                } else {
+                    Log.e(TAG, "fetchCouple:" + e.getMessage());
+                    if (e.getErrorCode() == 9010) {
                         Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
-                    }else if (e.getErrorCode() == 9016){
+                    } else if (e.getErrorCode() == 9016) {
                         Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -129,13 +135,13 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         });
     }
 
-    public int countAnnidays(int year,int month,int day){
+    public int countAnnidays(int year, int month, int day) {
         dateUtil.year = year;
-        Log.e(TAG,"year:"+dateUtil.year);
+        Log.e(TAG, "year:" + dateUtil.year);
         dateUtil.month = month;
-        Log.e(TAG,"month:"+dateUtil.month);
+        Log.e(TAG, "month:" + dateUtil.month);
         dateUtil.day = day;
-        Log.e(TAG,"day:"+dateUtil.day);
+        Log.e(TAG, "day:" + dateUtil.day);
         return dateUtil.countDays();
 
     }
@@ -147,7 +153,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
                 if (!TextUtils.isEmpty(otherAccount)) {
                     startActivity(new Intent(mContext, AnnversaryActivity.class));
-                }else {
+                } else {
                     Toast.makeText(mContext, "您还没添加另一半，不能使用纪念日功能！", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -155,7 +161,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
 
                 if (!TextUtils.isEmpty(otherAccount)) {
                     startActivity(new Intent(mContext, GalaryActivity.class));
-                }else {
+                } else {
                     Toast.makeText(mContext, "您还没添加另一半，不能使用相册功能！", Toast.LENGTH_SHORT).show();
                 }
 
@@ -166,7 +172,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             case 3:
                 if (!TextUtils.isEmpty(otherAccount)) {
                     startActivity(new Intent(mContext, DynamicsActivity.class));
-                }else {
+                } else {
                     Toast.makeText(mContext, "您还没添加另一半，不能使用留言板功能！", Toast.LENGTH_SHORT).show();
                 }
 
@@ -249,9 +255,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     private void updateUI(String anchor) {
-        if (anchor.equals(DemoCache.getAccount())){
+        if (anchor.equals(DemoCache.getAccount())) {
             homeMeHead.loadBuddyAvatar(anchor);
-        }else{
+        } else {
             homeOtherHead.loadBuddyAvatar(anchor);
         }
     }
