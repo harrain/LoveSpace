@@ -101,7 +101,11 @@ public class UserProfileSettingActivity extends UI {
         PickImageHelper.pickImage(UserProfileSettingActivity.this, PICK_AVATAR_REQUEST, option);
     }
 
-
+    @OnClick(R.id.nick_layout)
+    public void changeNick(){
+        UserProfileEditItemActivity.startActivity(UserProfileSettingActivity.this, UserConstant.KEY_NICKNAME,
+                nickValue.getText().toString());
+    }
 
     /**
      * 注销

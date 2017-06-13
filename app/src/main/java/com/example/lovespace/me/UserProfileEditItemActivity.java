@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lovespace.R;
+import com.example.lovespace.config.preference.Preferences;
+import com.example.lovespace.main.model.dao.UserDao;
 import com.netease.nim.uikit.cache.FriendDataCache;
 import com.netease.nim.uikit.common.activity.UI;
 import com.netease.nim.uikit.common.ui.dialog.DialogMaker;
@@ -37,6 +40,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by hzxuwen on 2015/9/14.
@@ -70,6 +76,8 @@ public class UserProfileEditItemActivity extends UI implements View.OnClickListe
     private RelativeLayout birthPickerLayout;
     private TextView birthText;
     private int gender;
+    private Context mContext;
+    private String TAG = "UserProfileEditItemA";
 
     public static final void startActivity(Context context, int key, String data) {
         Intent intent = new Intent();
@@ -82,6 +90,7 @@ public class UserProfileEditItemActivity extends UI implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         parseIntent();
         if (key == UserConstant.KEY_NICKNAME || key == UserConstant.KEY_PHONE || key == UserConstant.KEY_EMAIL
                 || key == UserConstant.KEY_SIGNATURE || key == UserConstant.KEY_ALIAS) {
@@ -306,8 +315,23 @@ public class UserProfileEditItemActivity extends UI implements View.OnClickListe
 
     private void onUpdateCompleted() {
         showKeyboard(false);
-        Toast.makeText(UserProfileEditItemActivity.this, R.string.user_info_update_success, Toast.LENGTH_SHORT).show();
-        finish();
+        UserDao.updateRow("nickname",editText.getText().toString(), Preferences.getUserId(),new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e==null){
+                    Toast.makeText(UserProfileEditItemActivity.this, R.string.user_info_update_success, Toast.LENGTH_SHORT).show();
+                    finish();
+                }else {
+                    if (e.getErrorCode() == 9010){
+                        Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                    }else if (e.getErrorCode() == 9016){
+                        Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                    }
+                    Log.e(TAG, "updateRow：e："+e.getMessage());
+                }
+            }
+        });
+
     }
 
     private class MyDatePickerDialog extends DatePickerDialog {
