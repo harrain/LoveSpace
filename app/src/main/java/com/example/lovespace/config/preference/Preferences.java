@@ -11,10 +11,10 @@ import com.example.lovespace.DemoCache;
 
 public class Preferences {
 
-    private static final String KEY_USER_ACCOUNT = "account";
-    private static final String KEY_USER_TOKEN = "token";
+    private static final String KEY_USER_ACCOUNT = "account";//云信id
+    private static final String KEY_USER_TOKEN = "token";//云信token
     private static final String KEY_OTHER = "other";
-    private static final String KEY_USER_ID = "user_objectid";
+    private static final String KEY_USER_ID = "user_objectid";//bmob 的user表id
     private static final String KEY_USER_SEX = "user_sex";
     private static final String KEY_USER_BIRTH = "user_birth";
     private static final String KEY_COUPLE_ID = "coupleid";
@@ -77,9 +77,10 @@ public class Preferences {
 
     public static void clear(){
         saveUserAccount("");
+        saveUserId("");
         saveUserToken("");
         saveOtherAccount("");
-
+        saveCoupleId("");
     }
 
     private static void saveString(String key, String value) {

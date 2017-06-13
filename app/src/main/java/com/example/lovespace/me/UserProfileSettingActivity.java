@@ -123,7 +123,7 @@ public class UserProfileSettingActivity extends UI {
      * 清除登陆状态
      */
     private void removeLoginState() {
-        Preferences.saveUserToken("");
+        Preferences.clear();
     }
 
 
