@@ -95,7 +95,7 @@ public class Preferences {
 
 
 
-    static SharedPreferences getSharedPreferences() {
+    private static SharedPreferences getSharedPreferences() {
         return DemoCache.getContext().getSharedPreferences("lovespace_user", Context.MODE_PRIVATE);
     }
 

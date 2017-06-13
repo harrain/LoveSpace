@@ -130,13 +130,17 @@ public class WelcomeActivity extends UI {
 
     private void saveTolocal(User user) {
         try {
-            if (Preferences.getUserId() == null)
+            if (TextUtils.isEmpty(Preferences.getUserId())) {
                 Preferences.saveUserId(user.getObjectId());
-            if (Preferences.getUserSex() == null)
-                Preferences.saveUserSex(user.getSex());
-            if (Preferences.getCoupleId() == null)
+                Log.e(TAG, "uid:" + Preferences.getUserId());
+            }
+            if (TextUtils.isEmpty(Preferences.getCoupleId())) {
                 Preferences.saveCoupleId(user.getCoupleid());
-            if (Preferences.getUserBirth() == null)
+                Log.e(TAG, "cid:" + Preferences.getCoupleId());
+            }
+            if (TextUtils.isEmpty(Preferences.getUserSex()))
+                Preferences.saveUserSex(user.getSex());
+            if (TextUtils.isEmpty(Preferences.getUserBirth()))
                 Preferences.saveUserBirth(user.getBirth().toString());
         }catch (Exception e){
             e.printStackTrace();

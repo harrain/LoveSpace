@@ -90,7 +90,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             homeTitleRl.setVisibility(View.INVISIBLE);
             return;
         }
+        homeTitleRl.setVisibility(View.VISIBLE);
         getUserInfo(otherAccount);
+        Log.e(TAG,"coupleday:"+DemoCache.getCoupleDays());
         if (DemoCache.getCoupleDays() != 0) {
             homeDate.setText("我们在一起 " + DemoCache.getCoupleDays() + " 天");
         } else {
@@ -99,6 +101,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     private void coupledays() {
+        Log.e(TAG,"coupleid:"+Preferences.getCoupleId());
         CoupleDao.fetchCouple(Preferences.getCoupleId(), new SQLQueryListener<Couple>() {
             @Override
             public void done(BmobQueryResult<Couple> result, BmobException e) {
@@ -106,6 +109,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
                     List<Couple> list = result.getResults();
                     if (list.size() > 0) {
                         String start = list.get(0).getCreatedAt();
+                        Log.e(TAG,"couple:"+start);
                         DemoCache.setStartTime(start);
                         Date d = dateUtil.string2date(start);
                         List<Integer> cd = dateUtil.string2int(dateUtil.date2string(d));
