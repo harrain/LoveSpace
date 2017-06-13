@@ -450,17 +450,31 @@ public class LoginActivity extends UI implements View.OnKeyListener{
         ContactHttpClient.getInstance().register(account, nickName, password, new ContactHttpClient.ContactHttpCallback<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                UserDao.addToBomb(account,nickName,password,null,Preferences.getUserToken());
-                Toast.makeText(LoginActivity.this, R.string.register_success, Toast.LENGTH_SHORT).show();
-                switchMode();  // 切换回登录
-                loginAccountEdit.setText(account);
-                loginPasswordEdit.setText(password);
+                UserDao.addToBomb(account, nickName, password, null, Preferences.getUserToken(), new OnCompleteListener<String>() {
+                    @Override
+                    public void onSuccess(String objectId) {
+                        Toast.makeText(LoginActivity.this, R.string.register_success, Toast.LENGTH_SHORT).show();
+                        switchMode();  // 切换回登录
+                        loginAccountEdit.setText(account);
+                        loginPasswordEdit.setText(password);
 
-                registerAccountEdit.setText("");
-                registerNickNameEdit.setText("");
-                registerPasswordEdit.setText("");
+                        registerAccountEdit.setText("");
+                        registerNickNameEdit.setText("");
+                        registerPasswordEdit.setText("");
 
-                DialogMaker.dismissProgressDialog();
+                        DialogMaker.dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailure(BmobException e) {
+                        if (e.getErrorCode() == 9010){
+                            Toast.makeText(mContext, "网络超时", Toast.LENGTH_SHORT).show();
+                        }else if (e.getErrorCode() == 9016){
+                            Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
             }
 
             @Override

@@ -25,7 +25,7 @@ public class UserDao {
 
     private static String TAG = "UserDao";
 
-    public static void addToBomb(String name,String nick,String pass,String cid,String token){
+    public static void addToBomb(String name, String nick, String pass, String cid, String token, final OnCompleteListener<String> listener){
         User user = new User(name,nick,pass,cid,token);
         user.save(new SaveListener<String>() {
             @Override
@@ -33,7 +33,9 @@ public class UserDao {
                 if(e==null){
                     Log.e("添加数据成功，返回objectId为",""+objectId);
                     Preferences.saveUserId(objectId);
+                    listener.onSuccess(objectId);
                 }else{
+                    listener.onFailure(e);
                     Log.e("创建数据失败" , e.getMessage());
                 }
             }
