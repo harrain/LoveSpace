@@ -114,9 +114,8 @@ public class UserProfileSettingActivity extends UI {
     public void logout() {
         removeLoginState();
         MainActivity.logout(this, false);
-
-
         NIMClient.getService(AuthService.class).logout();
+        finish();
     }
 
     /**

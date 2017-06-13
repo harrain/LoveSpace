@@ -80,13 +80,9 @@ public class WelcomeActivity extends UI {
         }else{
             Intent intent = getIntent();
             if (!firstEnter && intent == null){
-
                 finish();
             }else {
                 load();
-                searchFriend();
-                MainActivity.startMine(WelcomeActivity.this);
-                finish();
             }
         }
     }
@@ -109,6 +105,10 @@ public class WelcomeActivity extends UI {
                     User user = data.get(0);
                     Log.e(TAG,user.toString());
                     saveTolocal(user);
+
+                    searchFriend();
+                    MainActivity.startMine(WelcomeActivity.this);
+                    finish();
                 }else {
                     Log.e(TAG,"数据源出错，有"+data.size()+"个同名昵称用户");
                 }

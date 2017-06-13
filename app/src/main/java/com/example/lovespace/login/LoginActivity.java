@@ -230,14 +230,22 @@ public class LoginActivity extends UI implements View.OnKeyListener{
 
 
         account = loginAccountEdit.getEditableText().toString().toLowerCase();
-        String password = loginPasswordEdit.getEditableText().toString();
+        final String password = loginPasswordEdit.getEditableText().toString();
         UserDao.obtainTokenForLogin(account, password, new SQLQueryListener<User>() {
             @Override
             public void done(BmobQueryResult<User> result, BmobException e) {
                 if(e == null){
                     List<User> list = result.getResults();
                     if (list.size()>0){
-                        loginToNim(account,list.get(0).getToken());
+                        User user = list.get(0);
+                        Log.e(TAG,user.toString());
+                        saveTolocal(user);
+                        String token = user.getToken();
+                        if (token!=null) {
+                            loginToNim(account, token);
+                        }else {
+                            loginToNim(account,password);
+                        }
                     }
 
                 }else {
@@ -260,18 +268,17 @@ public class LoginActivity extends UI implements View.OnKeyListener{
         // 这里为了简便起见，demo就直接使用了密码的md5作为token。
         // 如果开发者直接使用这个demo，只更改appkey，然后就登入自己的账户体系的话，需要传入同步到云信服务器的token，而不是用户密码。
 
-        loginRequest = NimUIKit.doLogin(new LoginInfo(acc, Preferences.getUserToken()), new RequestCallback<LoginInfo>() {
+        loginRequest = NimUIKit.doLogin(new LoginInfo(acc, token), new RequestCallback<LoginInfo>() {
             @Override
             public void onSuccess(LoginInfo param) {
                 LogUtil.i(TAG, "login success");
 
-                onLoginDone();
-
                 DemoCache.setAccount(acc);
                 saveLoginInfo(acc, token);
-                load();
+                /*load();*/
                 searchFriend();
 
+                onLoginDone();
                 // 初始化消息提醒配置
                 initNotificationConfig();
 
@@ -325,6 +332,15 @@ public class LoginActivity extends UI implements View.OnKeyListener{
                     User user = data.get(0);
                     Log.e(TAG,user.toString());
                     saveTolocal(user);
+                    searchFriend();
+
+                    onLoginDone();
+                    // 初始化消息提醒配置
+                    initNotificationConfig();
+
+                    // 进入主界面
+                    MainActivity.start(LoginActivity.this, null);
+                    finish();
                 }else {
                     Log.e(TAG,"数据源出错，有"+data.size()+"个同名昵称用户");
                 }
