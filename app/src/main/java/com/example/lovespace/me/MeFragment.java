@@ -105,8 +105,6 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
         listen.setChecked(com.netease.nim.uikit.UserPreferences.isEarPhoneModeEnable());
 
         updateHeadView();
-        getUserInfo(account);
-        showOther();
         inform.setOnCheckedChangeListener(this);
         alarm.setOnCheckedChangeListener(this);
         light.setOnCheckedChangeListener(this);
@@ -119,7 +117,8 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
     @Override
     public void onResume() {
         super.onResume();
-
+        getUserInfo(account);
+        showOther();
     }
 
     private void updateHeadView() {
