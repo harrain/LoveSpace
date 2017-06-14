@@ -1,15 +1,26 @@
 package com.example.lovespace.me;
 
 
+import android.annotation.TargetApi;
+import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -22,6 +33,7 @@ import com.example.lovespace.DemoCache;
 import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.config.preference.UserPreferences;
+import com.example.lovespace.main.model.bean.Cover;
 import com.netease.nim.uikit.cache.NimUserInfoCache;
 import com.netease.nim.uikit.common.ui.dialog.DialogMaker;
 import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialogHelper;
@@ -36,12 +48,19 @@ import com.netease.nimlib.sdk.mixpush.MixPushService;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
 
 public class MeFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
 
@@ -78,10 +97,15 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
     Unbinder bind;
     @BindView(R.id.clear_record)
     RelativeLayout clearRecord;
+    @BindView(R.id.change_cover)
+    RelativeLayout changeCover;
     private String otherAccount;
     private NimUserInfo userInfo;
     private String account;
     private Context mContext;
+    //调用系统相册-选择图片
+    private static final int CHOOSE_PHOTO = 1;
+    private String TAG = "MeFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,6 +134,7 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
         light.setOnCheckedChangeListener(this);
         diy.setOnCheckedChangeListener(this);
         listen.setOnCheckedChangeListener(this);
+        registerForContextMenu(changeCover);
 
     }
 
@@ -152,6 +177,22 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
         tvBuddyName.setText(getString(R.string.other_acount) + " " + otherAccount);
         getUserInfo(otherAccount);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //获取图片路径
+        if (requestCode == CHOOSE_PHOTO && resultCode == getActivity().RESULT_OK && data != null) {
+            // 判断手机系统版本号
+            if (Build.VERSION.SDK_INT >= 19) {
+                // 4.4及以上系统使用这个方法处理图片
+                handleImageOnKitKat(data);
+            } else {
+                // 4.4以下系统使用这个方法处理图片
+                handleImageBeforeKitKat(data);
+            }
+        }
     }
 
     @OnClick(R.id.setting_head)
@@ -240,6 +281,7 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
     public void onDestroyView() {
         super.onDestroyView();
         bind.unbind();
+        unregisterForContextMenu(changeCover);
     }
 
 
@@ -341,4 +383,148 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
         NIMClient.getService(MsgService.class).clearMsgDatabase(true);
 
     }
+
+    @OnClick(R.id.change_cover)
+    public void onChangeCover() {
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.change_cover,menu);
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.reset_origin:
+                Preferences.showOriginCover(true);
+                break;
+            case R.id.select_galary:
+                //调用相册
+                Intent intent = new Intent("android.intent.action.GET_CONTENT");
+                intent.setType("image/*");
+                startActivityForResult(intent, CHOOSE_PHOTO); // 打开相册
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @TargetApi(19)
+    private void handleImageOnKitKat(Intent data) {
+        String imagePath = null;
+        Uri uri = data.getData();
+        Log.d("TAG", "handleImageOnKitKat: uri is " + uri);
+        if (DocumentsContract.isDocumentUri(getActivity(), uri)) {
+            // 如果是document类型的Uri，则通过document id处理
+            String docId = DocumentsContract.getDocumentId(uri);
+            if("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                String id = docId.split(":")[1]; // 解析出数字格式的id
+                String selection = MediaStore.Images.Media._ID + "=" + id;
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
+                imagePath = getImagePath(contentUri, null);
+            }
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            // 如果是content类型的Uri，则使用普通方式处理
+            imagePath = getImagePath(uri, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            // 如果是file类型的Uri，直接获取图片路径即可
+            imagePath = uri.getPath();
+        }
+        displayImage(imagePath); // 根据图片路径显示图片
+    }
+
+    private void handleImageBeforeKitKat(Intent data) {
+        Uri uri = data.getData();
+        String imagePath = getImagePath(uri, null);
+        displayImage(imagePath);
+    }
+
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        // 通过Uri和selection来获取真实的图片路径
+        Cursor cursor = getActivity().getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
+    }
+
+    private void displayImage(String imagePath) {
+        if (imagePath != null) {
+            toBomb(imagePath);
+            Log.e(TAG,"image:"+imagePath);
+
+        } else {
+            Toast.makeText(getContext(), "failed to get image", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void toBomb(final String image){
+        BmobQuery<Cover> bmobQuery = new BmobQuery<>();
+        bmobQuery.setCachePolicy(BmobQuery.CachePolicy.NETWORK_ELSE_CACHE);    // 先从缓存获取数据，如果没有，再从网络获取。
+        bmobQuery.addWhereEqualTo("userid",Preferences.getUserId());
+        bmobQuery.findObjects(new FindListener<Cover>() {
+            @Override
+            public void done(List<Cover> list, BmobException e) {
+                if (e==null){
+                    if (list == null || list.size() == 0){
+                        updateToBmob(image);
+                    }else {
+                        Log.e(TAG,"covelistsize:"+list.size());
+                        deleteFile(list.get(0));
+                    }
+                }else {
+                    Log.e(TAG,"查询封面失败");
+                }
+            }
+        });
+    }
+
+
+
+    private void uploadCover(String path){
+        Cover cover = new Cover(path,Preferences.getUserId());
+        cover.save(new SaveListener<String>() {
+            @Override
+            public void done(String objectId, BmobException e) {
+                if (e==null){
+                    Log.e("添加到cover表成功，返回objectId为",""+objectId);
+                }else {
+                    Log.e(TAG,"添加到cover表失败");
+                }
+            }
+        });
+    }
+
+    private void updateToBmob(String path){
+        final BmobFile bmobFile = new BmobFile(new File(path));
+        bmobFile.uploadblock(new UploadFileListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null) {
+                    //bmobFile.getFileUrl()--返回的上传文件的完整地址
+                    Log.e(TAG, "上传文件成功:" + bmobFile.getFileUrl());
+                    uploadCover(bmobFile.getFileUrl());
+                }else{
+                    Log.e(TAG,"上传文件失败：" + e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void deleteFile(Cover cover) {
+        deleteCover(cover.getObjectId());
+
+    }
+
+    private void deleteCover(String objectId){}
 }

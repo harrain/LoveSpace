@@ -134,6 +134,24 @@
                 style="@style/item_divider" />
 
             <RelativeLayout
+                android:id="@+id/change_cover"
+                style="@style/item_setting">
+
+                <TextView
+                    style="@style/item_setting_textview"
+                    android:text="更改启动界面背景"
+                    />
+
+                <ImageView
+                    style="@style/arrow_right"
+                    android:src="@mipmap/arrow_right" />
+
+            </RelativeLayout>
+
+            <View
+                style="@style/item_divider" />
+
+            <RelativeLayout
                 style="@style/item_setting">
 
                 <TextView

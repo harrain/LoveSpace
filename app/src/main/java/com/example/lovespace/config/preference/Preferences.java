@@ -18,6 +18,7 @@ public class Preferences {
     private static final String KEY_USER_SEX = "user_sex";
     private static final String KEY_USER_BIRTH = "user_birth";
     private static final String KEY_COUPLE_ID = "coupleid";
+    private static final String KEY_COVER = "cover";
 
     public static void saveUserId(String uid){
         saveString(KEY_USER_ID,uid);
@@ -75,6 +76,14 @@ public class Preferences {
         return getString(KEY_OTHER);
     }
 
+    public static void showOriginCover(boolean istrue){
+        saveBoolean(KEY_COVER,istrue);
+    }
+
+    public static boolean isShowOriginCover(){
+        return getBoolean(KEY_COVER);
+    }
+
     public static void clear(){
         saveUserAccount("");
         saveUserId("");
@@ -93,7 +102,15 @@ public class Preferences {
         return getSharedPreferences().getString(key, null);
     }
 
+    private static void saveBoolean(String key,boolean value){
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
 
+    private static boolean getBoolean(String key){
+        return getSharedPreferences().getBoolean(key,true);
+    }
 
     private static SharedPreferences getSharedPreferences() {
         return DemoCache.getContext().getSharedPreferences("lovespace_user", Context.MODE_PRIVATE);

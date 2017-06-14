@@ -73,7 +73,7 @@ public class LoginActivity extends UI implements View.OnKeyListener{
 
     private String TAG = "Login";
     private String account;
-    
+
     private Context mContext;
 
     @Override
