@@ -76,6 +76,14 @@ public class Preferences {
         return getString(KEY_OTHER);
     }
 
+    public static String getCover(){
+        return getString(KEY_COVER);
+    }
+
+    public static void saveCover(String image){
+        saveString(KEY_COVER,image);
+    }
+
     public static void showOriginCover(boolean istrue){
         saveBoolean(KEY_COVER,istrue);
     }

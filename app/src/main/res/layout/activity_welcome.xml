@@ -8,13 +8,20 @@
     tools:context="com.example.lovespace.main.activity.WelcomeActivity">
 
     <ImageView
+        android:id="@+id/splash_cover"
         android:scaleType="fitXY"
         android:src="@drawable/splash_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <TextView
-        android:visibility="invisible"
-        android:text="欢迎使用"
+        android:visibility="visible"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:text="你的回眸，让我铭记一生。
+        从此，我的眼里只有你！"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
         android:layout_marginTop="100dp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"

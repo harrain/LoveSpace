@@ -60,6 +60,7 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 public class MeFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
@@ -400,7 +401,7 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.reset_origin:
-                Preferences.showOriginCover(true);
+                Preferences.saveCover("");
                 break;
             case R.id.select_galary:
                 //调用相册
@@ -480,7 +481,7 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
                         updateToBmob(image);
                     }else {
                         Log.e(TAG,"covelistsize:"+list.size());
-                        deleteFile(list.get(0));
+                        deleteFile(list.get(0),image);
                     }
                 }else {
                     Log.e(TAG,"查询封面失败");
@@ -491,12 +492,14 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
 
 
 
-    private void uploadCover(String path){
+    private void uploadCover(final String path){
         Cover cover = new Cover(path,Preferences.getUserId());
         cover.save(new SaveListener<String>() {
             @Override
             public void done(String objectId, BmobException e) {
                 if (e==null){
+                    Preferences.saveCover(path);
+                    Toast.makeText(mContext, "更新启动界面背景成功！", Toast.LENGTH_SHORT).show();
                     Log.e("添加到cover表成功，返回objectId为",""+objectId);
                 }else {
                     Log.e(TAG,"添加到cover表失败");
@@ -521,10 +524,36 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
         });
     }
 
-    private void deleteFile(Cover cover) {
-        deleteCover(cover.getObjectId());
+    private void deleteFile(final Cover cover, final String image) {
+        BmobFile file = new BmobFile();
+        file.setUrl(cover.getCoverpath());//此url是上传文件成功之后通过bmobFile.getUrl()方法获取的。
+        file.delete(new UpdateListener() {
+
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    deleteCover(cover.getObjectId(),image);
+                }else{
+                    Log.e(TAG,"文件删除失败："+e.getErrorCode()+","+e.getMessage());
+                }
+            }
+        });
+
 
     }
 
-    private void deleteCover(String objectId){}
+    private void deleteCover(String objectId,final String image){
+        Cover cover = new Cover();
+        cover.setObjectId(objectId);
+        cover.delete(objectId, new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    updateToBmob(image);
+                }else{
+                    Log.e(TAG,"封面行删除失败："+e.getErrorCode()+","+e.getMessage());
+                }
+            }
+        });
+    }
 }
