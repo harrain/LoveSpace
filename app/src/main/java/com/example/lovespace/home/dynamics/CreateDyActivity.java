@@ -36,6 +36,7 @@ public class CreateDyActivity extends BaseActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                add.setEnabled(false);
                 cdyPb.setVisibility(View.VISIBLE);
                 Log.e(TAG,"uid:"+Preferences.getUserId());
                 DyDao.addDy(dyContentEt.getText().toString(), Preferences.getUserId(),
@@ -59,6 +60,7 @@ public class CreateDyActivity extends BaseActivity {
                                     Log.e(TAG, "e:" + e.getMessage());
                                 }
                                 cdyPb.setVisibility(View.INVISIBLE);
+                                add.setEnabled(true);
                             }
                         });
             }

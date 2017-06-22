@@ -64,6 +64,7 @@ public class CreateAlarmActivity extends BaseActivity {
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    add.setEnabled(false);
                     checkSync();
                     AlarmDao.updateAlarm(anameEt.getText().toString(), timeFormat(), uid, cid, intent.getStringExtra("objectId"),new UpdateListener() {
                         @Override
@@ -81,6 +82,7 @@ public class CreateAlarmActivity extends BaseActivity {
                                     Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
                                 }
                                 Log.e(TAG, "updateerror:" + e.getMessage());
+                                add.setEnabled(true);
                             }
                         }
                     });

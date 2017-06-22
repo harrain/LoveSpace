@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -57,16 +58,22 @@ public class CreateGalaryActivity extends UI {
         right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                right.setEnabled(false);
                 String name = gnameEt.getText().toString();
                 cPb.setVisibility(View.VISIBLE);
+                if (TextUtils.isEmpty(cid)){
+                    Log.e(TAG,"cid为空");
+                    Toast.makeText(mContext, "cid为空,无法创建相册", Toast.LENGTH_SHORT).show();
+                    right.setEnabled(true);
+                    return;
+                }
                 GalaryDao.addToBomb(name, cid, new OnCompleteListener<Boolean>() {
                     @Override
                     public void onSuccess(Boolean b) {
-
                                 cPb.setVisibility(View.INVISIBLE);
                                 Toast.makeText(CreateGalaryActivity.this, "创建相册成功", Toast.LENGTH_SHORT).show();
                                 onSuccessDone();
-
+                        right.setEnabled(true);
                     }
 
                     @Override
@@ -78,6 +85,7 @@ public class CreateGalaryActivity extends UI {
                         }else if (e.getErrorCode() == 9016){
                             Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
                         }
+                        right.setEnabled(true);
                     }
                 });
 

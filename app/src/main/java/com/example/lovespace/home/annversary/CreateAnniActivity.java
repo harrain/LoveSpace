@@ -97,6 +97,7 @@ public class CreateAnniActivity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                add.setEnabled(false);
                 onAdd();
             }
         });
@@ -123,6 +124,7 @@ public class CreateAnniActivity extends AppCompatActivity {
                         Toast.makeText(mContext, "无网络连接，请检查您的手机网络.", Toast.LENGTH_SHORT).show();
                     }
                     Log.e(TAG,"adderror:"+e.getMessage());
+                    add.setEnabled(true);
                 }
             }
         });
