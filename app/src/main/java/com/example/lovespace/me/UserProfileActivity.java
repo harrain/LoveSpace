@@ -67,6 +67,7 @@ public class UserProfileActivity extends UI {
     private final String KEY_MSG_NOTICE = "msg_notice";
 
     private String account;
+    private Context mContext;
 
     // 基本信息
     private HeadImageView headImageView;
@@ -105,7 +106,7 @@ public class UserProfileActivity extends UI {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile_activity);
-
+        mContext = this;
         ToolBarOptions options = new ToolBarOptions();
         options.titleId = R.string.user_profile;
         setToolBar(R.id.toolbar, options);
@@ -473,11 +474,19 @@ public class UserProfileActivity extends UI {
         }
     }
 
+
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (v == addFriendBtn) {
                 if (FLAG_ADD_FRIEND_DIRECTLY) {
+                    Friend friend = NIMClient.getService(FriendService.class).getFriendByAccount(account);
+
+                    Log.e(TAG+"：frend", friend.getExtension().toString());
+                    if (friend.getExtension().size()>1){
+                        Toast.makeText(mContext, "对方已有情侣关系，不能添加！", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     doAddFriend(null, true);  // 直接加为好友
                 } else {
                     onAddFriendByVerify(); // 发起好友验证请求
@@ -624,14 +633,17 @@ public class UserProfileActivity extends UI {
         Preferences.saveOtherAccount(account);
         CoupleDao.addToBmob(DemoCache.getAccount(), account, new SaveListener<String>() {
             @Override
-            public void done(String s, BmobException e) {
+            public void done(final String cid, BmobException e) {
                 if (e==null){
                     Log.e(TAG,"插入情侣表成功");
-                    UserDao.updateRow("coupleid",s,Preferences.getUserId(), new UpdateListener() {
+                    UserDao.updateRow("coupleid",cid,Preferences.getUserId(), new UpdateListener() {
                         @Override
                         public void done(BmobException e) {
                             if (e==null){
                                 Log.e(TAG,"更新coupleid成功");
+                                if (TextUtils.isEmpty(Preferences.getCoupleId())){
+                                    Preferences.saveCoupleId(cid);
+                                }
                             }else {
                                 Log.e(TAG,"updateRow:"+e.getMessage());
                             }
@@ -646,12 +658,24 @@ public class UserProfileActivity extends UI {
     }
 
     private void deleteLocal(){
-        Preferences.saveOtherAccount("");
+
         UserDao.updateRow("coupleid","",Preferences.getUserId(), new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e==null){
                     Log.e(TAG,"清空coupleid成功");
+                    CoupleDao.deleteRow(Preferences.getCoupleId(), new UpdateListener() {
+                        @Override
+                        public void done(BmobException e) {
+                            if (e==null){
+                                Preferences.saveOtherAccount("");
+                                Preferences.saveCoupleId("");
+                                Toast.makeText(UserProfileActivity.this, "删除另一半成功", Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(UserProfileActivity.this, "删除另一半失败", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }else {
                     Log.e(TAG,"清空coupleid:"+e.getMessage());
                 }

@@ -48,6 +48,8 @@ public class MainActivity extends UI {
     MeFragment meFragment;
 
     private static final String EXTRA_APP_QUIT = "APP_QUIT";
+    private String TAG = "MainActivity";
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +57,7 @@ public class MainActivity extends UI {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
-
+        mContext = this;
         fm = getSupportFragmentManager();
 
         if (homeFragment == null) homeFragment = new HomeFragment();
@@ -67,7 +69,9 @@ public class MainActivity extends UI {
     @Override
     protected void onStart() {
         super.onStart();
-        searchFriend();
+        if (TextUtils.isEmpty(Preferences.getOtherAccount())) {
+            searchFriend();
+        }
     }
 
     @OnClick(R.id.tab_home)
@@ -87,10 +91,13 @@ public class MainActivity extends UI {
         f.show(chatFragment);
         f.commit();*/
         String otherAccount = Preferences.getOtherAccount();
-        if (!TextUtils.isEmpty(otherAccount)) {
-            SessionHelper.startP2PSession(this, otherAccount);
-        }else {
+        if (TextUtils.isEmpty(otherAccount)) {
+            searchFriend();
+        }
+        if (TextUtils.isEmpty(Preferences.getOtherAccount())){
             Toast.makeText(this, "您还没添加另一半，不能聊天！", Toast.LENGTH_SHORT).show();
+        }else {
+            SessionHelper.startP2PSession(this, otherAccount);
         }
     }
 
@@ -136,16 +143,25 @@ public class MainActivity extends UI {
     }
 
     private void searchFriend(){
-        if (TextUtils.isEmpty(Preferences.getOtherAccount())) {
-            List<String> friendAccounts = NIMClient.getService(FriendService.class).getFriendAccounts();
-            Log.e("frend", friendAccounts.toString());
+        List<String> friendAccounts = null;
+        try {
+
+            friendAccounts = NIMClient.getService(FriendService.class).getFriendAccounts();
+            Log.e(TAG+"：frend", friendAccounts.toString());
+            if (friendAccounts.size()>1){
+                Toast.makeText(mContext, "预设情侣关系人数出错", Toast.LENGTH_SHORT).show();
+            }
             if (friendAccounts.size() > 0) {
                 for (String othername : friendAccounts) {
                     Preferences.saveOtherAccount(othername);
                     break;
                 }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
+
     }
 
     private void selectHomeBackground(){

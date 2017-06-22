@@ -46,7 +46,7 @@
     <string name="user_not_exsit">该用户不存在</string>
     <string name="user_tips">请检查你输入的帐号是否正确</string>
     <string name="begin_chat">聊天</string>
-    <string name="remove_friend">删除好友</string>
+    <string name="remove_friend">删除另一半</string>
     <string name="add_friend">加为好友</string>
     <string name="user_profile">个人名片</string>
     <!-- 个人名片 -->
@@ -59,8 +59,8 @@
     <string name="black_list">黑名单</string>
     <string name="msg_notice">消息提醒</string>
     <string name="add_friend_verify_tip">好友验证请求</string>
-    <string name="remove_friend_tip">删除好友后，将同时解除双方的好友关系</string>
-    <string name="remove_friend_success">删除好友成功</string>
+    <string name="remove_friend_tip">删除另一半后，将同时解除双方的恋爱关系</string>
+    <string name="remove_friend_success">解除恋爱关系成功</string>
     <string name="male">男</string>
     <string name="female">女</string>
     <string name="other">其他</string>

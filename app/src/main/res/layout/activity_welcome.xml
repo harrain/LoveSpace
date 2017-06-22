@@ -10,7 +10,6 @@
     <ImageView
         android:id="@+id/splash_cover"
         android:scaleType="fitXY"
-        android:src="@drawable/splash_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <TextView
@@ -19,6 +18,7 @@
         android:textColor="@color/white"
         android:text="你的回眸，让我铭记一生。
         从此，我的眼里只有你！"
+        android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp"

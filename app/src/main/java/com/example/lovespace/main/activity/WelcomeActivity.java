@@ -72,14 +72,21 @@ public class WelcomeActivity extends UI {
         bmobQuery.findObjects(new FindListener<Cover>() {
             @Override
             public void done(List<Cover> list, BmobException e) {
+                boolean isShow = false;
                 if (e==null){
                     if (list.size() > 0){
                         Preferences.saveCover(list.get(0).getCoverpath());
                         Glide.with(WelcomeActivity.this).load(list.get(0).getCoverpath()).into(splashCover);
+                    }else {
+                        Glide.with(WelcomeActivity.this).load(R.drawable.splash_bg).into(splashCover);
                     }
                 }else {
+                    isShow = true;
                     Log.e(TAG,"查询封面失败");
                 }
+                /*if (isShow){
+                    Glide.with(WelcomeActivity.this).load(R.drawable.splash_bg).into(splashCover);
+                }*/
             }
         });
     }
@@ -114,12 +121,20 @@ public class WelcomeActivity extends UI {
             LoginActivity.startMine(this);
             finish();
         } else {
-            Intent intent = getIntent();
-            if (!firstEnter && intent == null) {
-                finish();
+            /*Intent intent = getIntent();
+            if (!firstEnter) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        MainActivity.startMine(WelcomeActivity.this);
+                        finish();
+                    }
+                },1000);
+
             } else {
                 load();
-            }
+            }*/
+            load();
         }
     }
 
@@ -131,10 +146,19 @@ public class WelcomeActivity extends UI {
     private boolean canAutoLogin() {
         account = Preferences.getUserAccount();
         String token = Preferences.getUserToken();
+        Log.e(TAG,"account:"+account);
+        Log.e(TAG,"token:"+token);
+
         return !TextUtils.isEmpty(account) && !TextUtils.isEmpty(token);
     }
 
     private void load() {
+        if (TextUtils.isEmpty(account)){
+            Toast.makeText(mContext, "账户异常为空", Toast.LENGTH_SHORT).show();
+            Log.e(TAG,"load: 账户异常为空");
+            return;
+        }
+        Log.e(TAG,"load:"+account);
         UserDao.queryUserInfo(account, new OnCompleteListener<List<User>>() {
             @Override
             public void onSuccess(List<User> data) {
@@ -187,10 +211,15 @@ public class WelcomeActivity extends UI {
     private void searchFriend() {
         if (TextUtils.isEmpty(Preferences.getOtherAccount())) {
             List<String> friendAccounts = NIMClient.getService(FriendService.class).getFriendAccounts();
-            Log.e("frend", friendAccounts.toString());
+            Log.e(TAG+"：frend", friendAccounts.toString());
+            if (friendAccounts.size()>1){
+                Toast.makeText(mContext, "预设情侣关系人数出错", Toast.LENGTH_SHORT).show();
+            }
             if (friendAccounts.size() > 0) {
                 for (String othername : friendAccounts) {
-                    Preferences.saveOtherAccount(othername);
+                    if (TextUtils.isEmpty(Preferences.getOtherAccount())){
+                        Preferences.saveOtherAccount(othername);
+                    }
                     break;
                 }
             }

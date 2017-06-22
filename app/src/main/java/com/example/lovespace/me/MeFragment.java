@@ -33,7 +33,10 @@ import com.example.lovespace.DemoCache;
 import com.example.lovespace.R;
 import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.config.preference.UserPreferences;
+import com.example.lovespace.main.model.bean.Couple;
 import com.example.lovespace.main.model.bean.Cover;
+import com.example.lovespace.main.model.dao.CoupleDao;
+import com.example.lovespace.main.model.dao.UserDao;
 import com.netease.nim.uikit.cache.NimUserInfoCache;
 import com.netease.nim.uikit.common.ui.dialog.DialogMaker;
 import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialogHelper;
@@ -57,8 +60,10 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
@@ -145,7 +150,9 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
         super.onResume();
         getUserInfo(account);
         showOther();
+        obtainCoupleId();
     }
+
 
     private void updateHeadView() {
         account = DemoCache.getAccount();
@@ -160,8 +167,10 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
         if (TextUtils.isEmpty(otherAccount)) {
 
             List<String> friendAccounts = NIMClient.getService(FriendService.class).getFriendAccounts();
-            Log.e("frend", friendAccounts.toString());
-
+            Log.e(TAG+"：frend", friendAccounts.toString());
+            if (friendAccounts.size()>1){
+                Toast.makeText(mContext, "预设情侣关系人数出错", Toast.LENGTH_SHORT).show();
+            }
             if (friendAccounts == null || friendAccounts.size() == 0) {
                 return;
             }
@@ -170,6 +179,9 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
                 rlBuddy.setVisibility(View.VISIBLE);
                 tvBuddyName.setText(getString(R.string.other_acount) + " " + othername);
                 otherAccount = othername;
+                if (TextUtils.isEmpty(Preferences.getOtherAccount())){
+                    Preferences.saveOtherAccount(otherAccount);
+                }
                 break;
             }
         }
@@ -178,6 +190,55 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
         tvBuddyName.setText(getString(R.string.other_acount) + " " + otherAccount);
         getUserInfo(otherAccount);
 
+    }
+
+    private void obtainCoupleId() {
+        if (TextUtils.isEmpty(Preferences.getCoupleId())){
+            if (TextUtils.isEmpty(Preferences.getOtherAccount())){
+                Toast.makeText(mContext, "另一半为空", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            CoupleDao.searchCouple(Preferences.getOtherAccount(), new SQLQueryListener<Couple>() {
+                @Override
+                public void done(BmobQueryResult<Couple> bmobQueryResult, BmobException e) {
+                    if (e != null){
+                        Log.e(TAG,"addToBmob:"+e.getMessage());
+                        return;
+                    }
+
+                    if (bmobQueryResult == null || bmobQueryResult.getResults() == null || bmobQueryResult.getResults().size() == 0){
+                        Log.e(TAG,"couple表无结果");
+                        CoupleDao.addToBmob(account, Preferences.getOtherAccount(),new SaveListener<String>() {
+                            @Override
+                            public void done(final String cid, BmobException e) {
+                                if (e==null){
+                                    Log.e(TAG,"插入情侣表成功");
+                                    UserDao.updateRow("coupleid",cid,Preferences.getUserId(), new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+                                            if (e==null){
+                                                Log.e(TAG,"更新coupleid成功");
+                                                if (TextUtils.isEmpty(Preferences.getCoupleId())){
+                                                    Preferences.saveCoupleId(cid);
+                                                }
+                                            }else {
+                                                Log.e(TAG,"updateRow:"+e.getMessage());
+                                            }
+                                        }
+                                    });
+
+                                }else {
+                                    Log.e(TAG,"addToBmob:"+e.getMessage());
+                                }
+                            }
+                        });
+                    }else {
+                        Log.e(TAG,"couple表size:"+bmobQueryResult.getResults().size());
+                    }
+
+                }
+            });
+        }
     }
 
     @Override
@@ -282,9 +343,13 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
     public void onDestroyView() {
         super.onDestroyView();
         bind.unbind();
-        unregisterForContextMenu(changeCover);
+        //unregisterForContextMenu(changeCover);//Unable to destroy MainActivity
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -401,7 +466,10 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.reset_origin:
-                Preferences.saveCover("");
+                if (!TextUtils.isEmpty(Preferences.getCover())) {
+
+                    toBomb(null);
+                }
                 break;
             case R.id.select_galary:
                 //调用相册
@@ -549,6 +617,11 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
             @Override
             public void done(BmobException e) {
                 if(e==null){
+                    if (TextUtils.isEmpty(image)) {
+                        Preferences.saveCover("");
+                        Toast.makeText(mContext, "删除封面成功", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     updateToBmob(image);
                 }else{
                     Log.e(TAG,"封面行删除失败："+e.getErrorCode()+","+e.getMessage());

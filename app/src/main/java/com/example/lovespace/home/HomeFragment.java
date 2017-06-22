@@ -29,9 +29,12 @@ import com.example.lovespace.home.annversary.AnnversaryActivity;
 import com.example.lovespace.home.dynamics.DynamicsActivity;
 import com.example.lovespace.main.model.bean.Couple;
 import com.example.lovespace.main.model.dao.CoupleDao;
+import com.example.lovespace.main.model.dao.UserDao;
 import com.netease.nim.uikit.cache.NimUserInfoCache;
 import com.netease.nim.uikit.common.ui.imageview.HeadImageView;
+import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.friend.FriendService;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
 import java.util.Date;
@@ -43,6 +46,8 @@ import butterknife.Unbinder;
 import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SQLQueryListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 
 public class HomeFragment extends Fragment implements AdapterView.OnItemClickListener {
@@ -82,12 +87,26 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        otherAccount = Preferences.getOtherAccount();
-        getUserInfo(DemoCache.getAccount());
+    public void onResume() {
+        super.onResume();
         if (TextUtils.isEmpty(otherAccount)) {
             homeTitleRl.setVisibility(View.INVISIBLE);
+            List<String> friendAccounts = NIMClient.getService(FriendService.class).getFriendAccounts();
+            Log.e(TAG+"：frend", friendAccounts.toString());
+            if (friendAccounts.size()>1){
+                Toast.makeText(mContext, "预设情侣关系人数出错", Toast.LENGTH_SHORT).show();
+            }
+            if (friendAccounts == null || friendAccounts.size() == 0) {
+                return;
+            }
+            for (String othername : friendAccounts) {
+
+                otherAccount = othername;
+                if (TextUtils.isEmpty(Preferences.getOtherAccount())){
+                    Preferences.saveOtherAccount(otherAccount);
+                }
+                break;
+            }
             return;
         }
         homeTitleRl.setVisibility(View.VISIBLE);
@@ -98,6 +117,19 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
         } else {
             coupledays();
         }
+        obtainCoupleId();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        otherAccount = Preferences.getOtherAccount();
+        getUserInfo(DemoCache.getAccount());
+        Log.e(TAG,"democache:"+DemoCache.getAccount());
+        Log.e(TAG,"otherAccount:"+otherAccount);
+        Log.e(TAG,"uid:"+Preferences.getUserId());
+        Log.e(TAG,"cid:"+Preferences.getCoupleId());
+
     }
 
     private void coupledays() {
@@ -263,6 +295,55 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemClickLis
             homeMeHead.loadBuddyAvatar(anchor);
         } else {
             homeOtherHead.loadBuddyAvatar(anchor);
+        }
+    }
+
+    private void obtainCoupleId() {
+        if (TextUtils.isEmpty(Preferences.getCoupleId())){
+            if (TextUtils.isEmpty(Preferences.getOtherAccount())){
+                Toast.makeText(mContext, "另一半为空", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            CoupleDao.searchCouple(Preferences.getOtherAccount(), new SQLQueryListener<Couple>() {
+                @Override
+                public void done(BmobQueryResult<Couple> bmobQueryResult, BmobException e) {
+                    if (e != null){
+                        Log.e(TAG,"addToBmob:"+e.getMessage());
+                        return;
+                    }
+
+                    if (bmobQueryResult == null || bmobQueryResult.getResults() == null || bmobQueryResult.getResults().size() == 0){
+                        Log.e(TAG,"couple表无结果");
+                        CoupleDao.addToBmob(DemoCache.getAccount(), Preferences.getOtherAccount(),new SaveListener<String>() {
+                            @Override
+                            public void done(final String cid, BmobException e) {
+                                if (e==null){
+                                    Log.e(TAG,"插入情侣表成功");
+                                    UserDao.updateRow("coupleid",cid,Preferences.getUserId(), new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+                                            if (e==null){
+                                                Log.e(TAG,"更新coupleid成功");
+                                                if (TextUtils.isEmpty(Preferences.getCoupleId())){
+                                                    Preferences.saveCoupleId(cid);
+                                                }
+                                            }else {
+                                                Log.e(TAG,"updateRow:"+e.getMessage());
+                                            }
+                                        }
+                                    });
+
+                                }else {
+                                    Log.e(TAG,"addToBmob:"+e.getMessage());
+                                }
+                            }
+                        });
+                    }else {
+                        Log.e(TAG,"couple表size:"+bmobQueryResult.getResults().size());
+                    }
+
+                }
+            });
         }
     }
 

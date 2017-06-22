@@ -360,13 +360,17 @@ public class LoginActivity extends UI implements View.OnKeyListener{
 
     private void saveTolocal(User user) {
         try {
-            if (Preferences.getUserId() == null)
+            if (TextUtils.isEmpty(Preferences.getUserId())) {
                 Preferences.saveUserId(user.getObjectId());
-            if (Preferences.getUserSex() == null)
-                Preferences.saveUserSex(user.getSex());
-            if (Preferences.getCoupleId() == null)
+                Log.e(TAG, "uid:" + Preferences.getUserId());
+            }
+            if (TextUtils.isEmpty(Preferences.getCoupleId())) {
                 Preferences.saveCoupleId(user.getCoupleid());
-            if (Preferences.getUserBirth() == null)
+                Log.e(TAG, "cid:" + Preferences.getCoupleId());
+            }
+            if (TextUtils.isEmpty(Preferences.getUserSex()))
+                Preferences.saveUserSex(user.getSex());
+            if (TextUtils.isEmpty(Preferences.getUserBirth()))
                 Preferences.saveUserBirth(user.getBirth().toString());
         }catch (Exception e){
             e.printStackTrace();
@@ -376,10 +380,15 @@ public class LoginActivity extends UI implements View.OnKeyListener{
     private void searchFriend(){
         if (TextUtils.isEmpty(Preferences.getOtherAccount())) {
             List<String> friendAccounts = NIMClient.getService(FriendService.class).getFriendAccounts();
-            Log.e("frend", friendAccounts.toString());
+            Log.e(TAG,":frend"+friendAccounts.toString());
+            if (friendAccounts.size()>1){
+                Toast.makeText(mContext, "预设情侣关系人数出错", Toast.LENGTH_SHORT).show();
+            }
             if (friendAccounts.size() > 0) {
                 for (String othername : friendAccounts) {
-                    Preferences.saveOtherAccount(othername);
+                    if(TextUtils.isEmpty(Preferences.getOtherAccount())) {
+                        Preferences.saveOtherAccount(othername);
+                    }
                     break;
                 }
             }
