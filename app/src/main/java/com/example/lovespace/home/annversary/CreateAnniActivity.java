@@ -69,7 +69,7 @@ public class CreateAnniActivity extends AppCompatActivity {
             add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AnniDao.updateAnni(anameEt.getText().toString(), mYear + "-" + mMonth + "-" + mDay,
+                    AnniDao.updateAnni(anameEt.getText().toString(), dateFormat(),
                             Preferences.getCoupleId(), intent.getStringExtra("objectId"), new UpdateListener() {
                                 @Override
                                 public void done(BmobException e) {
@@ -111,7 +111,7 @@ public class CreateAnniActivity extends AppCompatActivity {
 
 
     public void onAdd() {
-        AnniDao.addToBmob(anameEt.getText().toString(), mYear+"-"+mMonth+"-"+mDay, null, null, Preferences.getCoupleId(), new SaveListener<String>() {
+        AnniDao.addToBmob(anameEt.getText().toString(), dateFormat(), null, null, Preferences.getCoupleId(), new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
                 if (e == null) {
@@ -164,8 +164,8 @@ public class CreateAnniActivity extends AppCompatActivity {
             mYear = year;
             mMonth = monthOfYear +1;
             mDay = dayOfMonth;
-            Log.e(TAG,mYear+"-"+mMonth+"-"+mDay);
-            dt.setText(mYear+"-"+mMonth+"-"+mDay);
+            Log.e(TAG,dateFormat());
+            dt.setText(dateFormat());
         }
     };
 
@@ -175,5 +175,25 @@ public class CreateAnniActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         onBackClicked();
+    }
+
+    public String dateFormat(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(mYear);
+        sb.append("-");
+        if (mMonth < 10){
+            sb.append("0");
+            sb.append(mMonth);
+        }else {
+            sb.append(mMonth);
+        }
+        sb.append("-");
+        if (mDay <10){
+            sb.append("0");
+            sb.append(mDay);
+        }else {
+            sb.append(mDay);
+        }
+        return sb.toString();
     }
 }

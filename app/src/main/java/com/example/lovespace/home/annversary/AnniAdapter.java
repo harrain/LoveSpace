@@ -227,21 +227,23 @@ public class AnniAdapter extends RecyclerView.Adapter {
             List<Integer> currents = dateUtil.string2int(dateUtil.date2string(date));
             long dl = dateUtil.date2long(day);
             long dal = dateUtil.date2long(date);
+            Log.e(TAG,dl+":"+dal);
             if (annis.get(index).getAnniname().contains("生日")){
-                list.add(0,currents.get(0));
-                String month1 = null;
-                String d1 = null;
-                if (list.get(1)<10)  month1 = "0"+list.get(1);
-                if (list.get(2)<10)  d1 = "0"+list.get(2);
-                long newa = dateUtil.date2long(list.get(0)+"-"+month1+d1);
+                list.set(0,currents.get(0));
+                Log.e(TAG,"生日"+"list0:"+list.get(0));
+
+                long newa = dateUtil.date2long(list.get(0)+"-"+list.get(1)+"-"+list.get(2));
+                Log.e(TAG,"生日"+newa+":"+dal);
                 if (newa > dal){
-                    sameYear(list,currents,day,date,index,dl,dal);
+                    sameYear(list,currents,day,date,index,newa,dal);
                 }else {
                     list.add(0,currents.get(0)+1);
                     int d = dateUtil.onlyDays(list,currents);
                     titleContent.setText(annis.get(index).getAnniname() +" 还有");
                     dayTv.setText(d+"天");
+                    Log.e(TAG,annis.get(index).getAnniname() +" 还有"+d+"天");
                 }
+                return;
             }
 
             if (list.get(0).equals(currents.get(0))){
@@ -252,10 +254,11 @@ public class AnniAdapter extends RecyclerView.Adapter {
                 if ( dl> dal){
                     titleContent.setText(annis.get(index).getAnniname() +" 还有");
                     dayTv.setText(d+"天");
-
+                    Log.e(TAG,annis.get(index).getAnniname() +" 还有"+d+"天");
                 }else {
                     titleContent.setText(annis.get(index).getAnniname() +" 已经");
                     dayTv.setText(d+"天");
+                    Log.e(TAG,annis.get(index).getAnniname() +" 还有"+d+"天");
                 }
             }
 

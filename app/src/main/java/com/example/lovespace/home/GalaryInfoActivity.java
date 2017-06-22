@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -109,6 +110,10 @@ public class GalaryInfoActivity extends UI {
         setUpView();
         registerForContextMenu(moreSetBtn);
         cid = Preferences.getCoupleId();
+        if (TextUtils.isEmpty(cid)){
+            Log.e(TAG,"cid为空");
+            Toast.makeText(mContext, "cid为空", Toast.LENGTH_SHORT).show();
+        }
         loadData();
     }
 

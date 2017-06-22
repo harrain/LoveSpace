@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -70,6 +71,11 @@ public class GalaryActivity extends UI {
 
     private void initData() {
         cid = Preferences.getCoupleId();
+        if (TextUtils.isEmpty(cid)){
+            Log.e(TAG,"cid为空");
+            Toast.makeText(mContext, "cid为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
         refreshUI();
 
     }

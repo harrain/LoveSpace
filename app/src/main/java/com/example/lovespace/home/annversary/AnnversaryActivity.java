@@ -80,13 +80,14 @@ public class AnnversaryActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.e(TAG,"onNewIntent...");
-        annis.clear();
+        anniPb.setVisibility(View.VISIBLE);
         fetchData();
     }
 
     private void initData() {
         uid = Preferences.getUserId();
         cid = Preferences.getCoupleId();
+        anniPb.setVisibility(View.VISIBLE);
         fetchData();
 
     }
