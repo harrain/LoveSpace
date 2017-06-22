@@ -83,4 +83,6 @@
     <string name="nim_status_bar_hidden_msg_content">你收到一条新消息</string>
     <string name="operation_too_frequent">操作太频繁</string>
     <string name="clear_msg_history_success">聊天记录已清空</string>
+    <string name="message_history_query">历史查询</string>
+    <string name="message_clear">清除消息</string>
 </resources>

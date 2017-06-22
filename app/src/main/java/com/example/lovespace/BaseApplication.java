@@ -15,6 +15,7 @@ import com.example.lovespace.config.preference.Preferences;
 import com.example.lovespace.config.preference.UserPreferences;
 import com.example.lovespace.main.activity.WelcomeActivity;
 import com.example.lovespace.session.NimDemoLocationProvider;
+import com.example.lovespace.session.SessionHelper;
 import com.netease.nim.uikit.NimUIKit;
 import com.netease.nim.uikit.contact.core.query.PinYin;
 import com.netease.nim.uikit.custom.DefalutUserInfoProvider;
@@ -111,6 +112,9 @@ public class BaseApplication extends Application {
     private void initUIKit(){
         // 初始化，使用 uikit 默认的用户信息提供者
         NimUIKit.init(this);
+
+        // 会话窗口的定制初始化。
+        SessionHelper.init();
 
         // 设置地理位置提供者。如果需要发送地理位置消息，该参数必须提供。如果不需要，可以忽略。
         NimUIKit.setLocationProvider(new NimDemoLocationProvider());

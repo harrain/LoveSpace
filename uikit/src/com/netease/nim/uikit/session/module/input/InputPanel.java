@@ -581,6 +581,7 @@ public class InputPanel implements IEmoticonSelectedListener, IAudioRecordCallba
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     touched = true;
+                    Log.e(TAG,"init audio");
                     initAudioRecord();
                     onStartAudioRecord();
                 } else if (event.getAction() == MotionEvent.ACTION_CANCEL
@@ -615,6 +616,7 @@ public class InputPanel implements IEmoticonSelectedListener, IAudioRecordCallba
      */
     private void initAudioRecord() {
         if (audioMessageHelper == null) {
+            Log.e(TAG,"初始化AudioRecord");
             audioMessageHelper = new AudioRecorder(container.activity, RecordType.AAC, AudioRecorder.DEFAULT_MAX_AUDIO_RECORD_TIME_SECOND, this);
         }
     }
@@ -626,6 +628,7 @@ public class InputPanel implements IEmoticonSelectedListener, IAudioRecordCallba
         container.activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         audioMessageHelper.startRecord();
+        Log.e(TAG,"开始语音录制");
         cancelled = false;
     }
 
@@ -682,6 +685,7 @@ public class InputPanel implements IEmoticonSelectedListener, IAudioRecordCallba
      * 开始语音录制动画
      */
     private void playAudioRecordAnim() {
+        Log.e(TAG,"开始语音录制动画");
         audioAnimLayout.setVisibility(View.VISIBLE);
         time.setBase(SystemClock.elapsedRealtime());
         time.start();
@@ -705,10 +709,11 @@ public class InputPanel implements IEmoticonSelectedListener, IAudioRecordCallba
     @Override
     public void onRecordStart(File audioFile, RecordType recordType) {
         started = true;
+        Log.e(TAG,"touched:"+touched);
         if (!touched) {
             return;
         }
-
+        Log.e(TAG,"onRecordStart");
         audioRecordBtn.setText(R.string.record_audio_end);
         audioRecordBtn.setBackgroundResource(R.drawable.nim_message_input_edittext_box_pressed);
 
@@ -720,6 +725,7 @@ public class InputPanel implements IEmoticonSelectedListener, IAudioRecordCallba
     public void onRecordSuccess(File audioFile, long audioLength, RecordType recordType) {
         IMMessage audioMessage = MessageBuilder.createAudioMessage(container.account, container.sessionType, audioFile, audioLength);
         container.proxy.sendMessage(audioMessage);
+        Log.e(TAG,"onRecordSuccess");
     }
 
     @Override
