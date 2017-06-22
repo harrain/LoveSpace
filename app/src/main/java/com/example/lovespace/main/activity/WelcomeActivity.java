@@ -33,6 +33,7 @@ import cn.bmob.v3.listener.FindListener;
 public class WelcomeActivity extends UI {
 
     private static final String TAG = "WelcomeActivity";
+
     @BindView(R.id.splash_cover)
     ImageView splashCover;
 
@@ -58,11 +59,7 @@ public class WelcomeActivity extends UI {
         if (savedInstanceState != null) {
             setIntent(new Intent()); // 从堆栈恢复，不再重复解析之前的intent
         }
-        if (!firstEnter) {
-            onIntent();
-        } else {
-            customSplash = true;
-        }
+
     }
 
     private void fetchBmob() {
@@ -94,6 +91,7 @@ public class WelcomeActivity extends UI {
     @Override
     protected void onResume() {
         super.onResume();
+
         if (firstEnter) {
             firstEnter = false;
             Runnable runnable = new Runnable() {
@@ -107,11 +105,12 @@ public class WelcomeActivity extends UI {
                     }
                 }
             };
-            if (customSplash) {
-                getHandler().postDelayed(runnable, 1000);
-            } else {
-                runnable.run();
-            }
+
+            getHandler().postDelayed(runnable, 1000);
+
+        }else {
+            MainActivity.startMine(WelcomeActivity.this);
+            finish();
         }
 
     }
@@ -151,6 +150,7 @@ public class WelcomeActivity extends UI {
 
         return !TextUtils.isEmpty(account) && !TextUtils.isEmpty(token);
     }
+
 
     private void load() {
         if (TextUtils.isEmpty(account)){

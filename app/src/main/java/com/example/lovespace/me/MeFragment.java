@@ -202,7 +202,7 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
                 @Override
                 public void done(BmobQueryResult<Couple> bmobQueryResult, BmobException e) {
                     if (e != null){
-                        Log.e(TAG,"addToBmob:"+e.getMessage());
+                        Log.e(TAG,"searchCouple:"+e.getMessage());
                         return;
                     }
 
@@ -234,6 +234,28 @@ public class MeFragment extends Fragment implements CompoundButton.OnCheckedChan
                         });
                     }else {
                         Log.e(TAG,"couple表size:"+bmobQueryResult.getResults().size());
+                        if (bmobQueryResult.getResults().size() > 1){
+                            Toast.makeText(mContext, "预设情侣人数出错", Toast.LENGTH_SHORT).show();
+                        }
+                        List<Couple> couples = bmobQueryResult.getResults();
+                        for (Couple couple:couples){
+                            final String cid = couple.getObjectId();
+                            Log.e(TAG,"couple表id："+Preferences.getCoupleId());
+                            UserDao.updateRow("coupleid",cid,Preferences.getUserId(), new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if (e==null){
+                                        Log.e(TAG,"更新coupleid成功");
+                                        if (TextUtils.isEmpty(Preferences.getCoupleId())){
+                                            Preferences.saveCoupleId(cid);
+                                        }
+                                    }else {
+                                        Log.e(TAG,"updateRow:"+e.getMessage());
+                                    }
+                                }
+                            });
+                            break;
+                        }
                     }
 
                 }

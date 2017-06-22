@@ -235,6 +235,11 @@ public class LoginActivity extends UI implements View.OnKeyListener{
             @Override
             public void done(BmobQueryResult<User> result, BmobException e) {
                 if(e == null){
+                    if (result == null || result.getResults() == null || result.getResults().size() == 0){
+                        DialogMaker.dismissProgressDialog();
+                        Toast.makeText(mContext, "用户名或者密码错误！", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     List<User> list = result.getResults();
                     if (list.size()>0){
                         User user = list.get(0);
