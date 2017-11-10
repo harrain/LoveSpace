@@ -6,7 +6,7 @@
 
 <img src="screenshots/galary.jpg" width="350px" height="550px"/> <img src="screenshots/clock.jpg" width="350px" height="550px"/>
 
-即时通信用的是网易云新IM
+即时通信用的是网易云信IM
 
 ### 协议 Apache-2.0
 
